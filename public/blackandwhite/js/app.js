@@ -1,5 +1,3 @@
-var zflex_url = 'http://localhost/zflex/';
-
 function isNumber(n) {
   return !isNaN(parseFloat(n)) && isFinite(n);
 }

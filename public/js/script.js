@@ -1,5 +1,3 @@
-var zflex_url = 'http://localhost/zflex/';
-
 jQuery(document).ready(function($) {
 	var id_media = 0;
 	alertify.logPosition("bottom right");
