@@ -33,9 +33,9 @@ Cách cài đặt
 
 Admin
 ------------
- - url: `/admin_zflex` ( cái này có thể thay đổi )
- - username: `admin`
- - password: `123123`
+ - url: ```/admin_zflex``` ( cái này có thể thay đổi )
+ - username: ```admin```
+ - password: ```123123```
  
 Yêu cầu
 ------------
