@@ -8,7 +8,6 @@ Source code thuê tài khoản chơi game
 
 Hình ảnh
 ------------
-**FRONTEND**
 
 
 
