@@ -6,6 +6,11 @@ Mô tả
 
 Source code thuê tài khoản chơi game
 
+Hình ảnh
+------------
+
+![Alt text](https://imgur.com/ytkZWPU)
+
 Cách cài đặt
 ------------
 
@@ -16,7 +21,7 @@ Cách cài đặt
 
 Admin
 ------------
- - url: `/zlfex_admin`
+ - url: `/admin_zflex`
  - username: `admin`
  - password: `123123`
  
