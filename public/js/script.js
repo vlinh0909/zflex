@@ -824,8 +824,6 @@ jQuery(document).ready(function($) {
 				$('.isDefault').not(this).attr('checked',false);
 			}
 		});
-	// Gallery.js
-	gallery_delete();
 	// Ajax.js
 	ajax_delete();
 	// Functions.js
