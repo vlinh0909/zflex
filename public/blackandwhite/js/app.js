@@ -714,59 +714,6 @@ $('.carousel').flickity({
 
 $('.menu .item').tab();
 
-var content = [
-  { title: 'Andorra',
-  	description: 'Yasuo' },
-  { title: 'United Arab Emirates',
-  	description: 'Yasuo' },
-  { title: 'Afghanistan',
-  	description: 'Yasuo' },
-  { title: 'Antigua' ,
-  	description: 'Yasuo'},
-  { title: 'Anguilla' ,
-  	description: 'Yasuo'},
-  { title: 'Albania',
-  	description: 'Yasuo' },
-  { title: 'Armenia' ,
-  	description: 'Yasuo'},
-  { title: 'Netherlands Antilles' ,
-  	description: 'Yasuo'},
-  { title: 'Angola' ,
-  	description: 'Yasuo'},
-  { title: 'Argentina' ,
-  	description: 'Yasuo'},
-  { title: 'American Samoa',
-  	description: 'Yasuo' },
-  { title: 'Austria' ,
-  	description: 'Yasuo'},
-  { title: 'Australia' ,
-  	description: 'Yasuo'},
-  { title: 'Aruba',
-  	description: 'Yasuo' },
-  { title: 'Aland Islands' ,
-  	description: 'Yasuo'},
-  { title: 'Azerbaijan',
-  	description: 'Yasuo' },
-  { title: 'Bosnia',
-  	description: 'Yasuo' },
-  { title: 'Barbados' ,
-  	description: 'Yasuo'},
-  { title: 'Bangladesh',
-  	description: 'Yasuo' },
-  { title: 'Belgium' ,
-  	description: 'Yasuo'},
-  { title: 'Burkina Faso',
-  	description: 'Yasuo' },
-  { title: 'Bulgaria' ,
-  	description: 'Yasuo'},
-  { title: 'Bahrain',
-  	description: 'Yasuo' },
-  { title: 'Burundi',
-  	description: 'Yasuo' }
-  // etc
-];
-
-
 $(".filter").on("click",".result",function(event){
 	event.preventDefault();
 });
@@ -785,16 +732,4 @@ var htmlListSkin = function(skin , champ){
 
 $(".ad-search").on("click",".trash",function(){
 	$(this).parent('.item').remove();
-});
-
-$('.ui.search').search({
-    source: content,
-    maxResults:false,
-    searchOnFocus:false,
-    minCharacters:2,
-    onSelect(result, response){
-    	$("#search").val('');
-    	$('.ad-search .content .header').text().indexOf(result['title']) > -1 ? null : $(".ad-search-input .list").append(htmlListSkin(result['title'],result['description']));
-    	return false
-    }
 });
