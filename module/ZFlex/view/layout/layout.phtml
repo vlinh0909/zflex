@@ -1,0 +1,421 @@
+<!-- Code được viết bởi : https://www.facebook.com/vulinh007 -->
+<?php echo $this->doctype(); ?>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <?php echo $this->headTitle($this->translate('ZFlex'))->setSeparator(' - ')->setAutoEscape(false) ?>
+
+    <?php echo $this->headMeta()
+        ->appendName('viewport', 'width=device-width, initial-scale=1.0')
+        ->appendHttpEquiv('X-UA-Compatible', 'IE=edge')
+    ?>
+
+    <!-- Le styles -->
+    <?php echo $this->headLink(array('rel' => 'shortcut icon', 'type' => 'image/vnd.microsoft.icon', 'href' => $this->basePath() . '/img/favicon.ico'))
+                    ->prependStylesheet($this->basePath() . '/css/style.css')
+                    ->prependStylesheet('https://cdnjs.cloudflare.com/ajax/libs/morris.js/0.5.1/morris.css')
+                    ->prependStylesheet($this->basePath() . '/plugin/perfect-scrollbar/css/perfect-scrollbar.min.css')
+                    ->prependStylesheet($this->basePath() . '/plugin/icon/icomoon/styles.css')
+                    ->prependStylesheet($this->basePath() . '/plugin/font-awesome/css/font-awesome.min.css')
+                    ->prependStylesheet($this->basePath() . '/plugin/alertify.css')
+                    ->prependStylesheet('https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css') 
+                    ->prependStylesheet('https://cdnjs.cloudflare.com/ajax/libs/dropzone/5.2.0/dropzone.css') 
+                    ->prependStylesheet('https://fonts.googleapis.com/css?family=Open+Sans:400,600,700,800') 
+                    ->prependStylesheet('https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css') 
+                    ->prependStylesheet('//cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.11.1/bootstrap-table.min.css') 
+                    ->prependStylesheet('https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.4/css/select2.min.css') 
+                    ->prependStylesheet('https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.1.25/jquery.fancybox.min.css') 
+    ?>
+</head>
+
+<body>
+    <!-- Navbar -->
+    <nav class="navbar fixed-top p-0">
+        <!-- Navbar Header -->
+        <div class="navbar-header align-self-stretch">
+            <a href="" class="navbar-brand text-center text-white d-block">
+                <img src="<?php echo $this->Path()->PathIMG('logo.png') ?>" class="img-big">
+                <img src="<?php echo $this->Path()->PathIMG('img-small.png') ?>" style="display: none;" class="img-small">
+            </a>
+        </div>
+        <!-- /Navbar Header -->
+        <!-- Navbar Left -->
+        <div class="navbar-left d-flex align-self-stretch align-items-center">
+            <!-- Sidebar Toggle -->
+            <ul class="nav navbar-nav">
+                <li class="sidebar-toggle">
+                    <a href="javascript:void(0)" class="mx-3"><i class="icon-three-bars"></i></a>
+                </li>
+            </ul>
+            <!-- /Sidebar Toggle -->
+            <!-- Form Search Navbar -->
+            <form class="form-inline mr-auto input-group ml-1">
+                <!-- <input type="" class="form-control form-search-navbar" name="" placeholder="Tìm kiếm ..."> -->
+            </form>
+            <!-- /Form Search Navbar -->
+            <!-- Navbar Right Small-->
+            <ul class="navbar-nav d-flex flex-row navbar-_right align-items-center">
+                <li class="nav-item py-4 ml-5 hidden-xs hidden-sm dropdown">
+                    <a class="btn nav-link btn-info px-4 text-white btn-icon" href="<?php echo $this->url('home'); ?>" target="_blank">WEB</a>
+                </li>
+                <!-- Dropdown Create New -->
+                <li class="nav-item py-4 mr-4 ml-5 hidden-xs hidden-sm dropdown">
+                    <a class="btn nav-link btn-info px-4 text-white btn-icon" data-toggle="dropdown" href="javascript:void(0)"><i class="icon-add-to-list"></i>Tạo mới</a>
+                    <div class="dropdown-menu">
+                        <span class="dropdown-header">Tạo mới ...</span>
+                        <a href="<?php echo $this->url('zflex/category',array('action'=>'add')); ?>" class="dropdown-item">Game</a>
+                        <a href="<?php echo $this->Path()->MemberAdd(); ?>" class="dropdown-item">Thành viên</a>
+                        <a href="<?php echo $this->url('zflex/permission',array('action'=>'add')); ?>" class="dropdown-item">Quyền</a>
+                        <a href="<?php echo $this->url('zflex/role',array('action'=>'add')); ?>" class="dropdown-item">Luật</a>
+                    </div>
+                </li>
+                <!-- /Dropdown Create New -->
+                <!-- Dropdown Notifications -->
+                <li class="nav-item p-4 hidden-xs hidden-sm">
+                    <a class="nav-link" href="javascript:void(0)" data-toggle="dropdown"><i class="icon-earth" aria-hidden="true"></i><span class="badge badge-navbar badge-pill badge-secondary"><?php echo $this->Data()->CountReport()['read']; ?></span></a>
+                    <div class="dropdown-menu dropdown-card">
+                        <div class="card">
+                            <div class="card-header p-3 d-flex justify-content-between">
+                                Tố cáo mới<span class="badge badge-navbar-dropdown badge-card badge-pill badge-secondary"><?php echo $this->Data()->CountReport()['read']; ?></span>
+                            </div>
+                            <ul class="list-unstyled p-3 text-white dropdown-list-group">
+                                <?php if($this->Data()->ReportShop()): ?>
+                                <?php foreach($this->Data()->ReportShop() as $k => $v): ?>
+                                <li>
+                                    <a class="media" href="<?php echo $this->url('zflex').'#reportShop'; ?>">
+                                        <span class="d-flex">
+                                            <?php if($v->getIsRead() == 1): ?>
+                                                <i class="icon-checkmark3 todo-icon"></i>
+                                            <?php else: ?>
+                                                <i class="icon-bell3 todo-icon"></i>
+                                            <?php endif; ?>
+                                        </span>
+                                        <span class="media-body ml-2">
+                                            <p class="media-heading m-0"><?php echo $v->getShop()->getCustomer()->getFbName(); ?></p>
+                                            <p class="media-content m-0"><?php echo $v->getMessage(); ?></p>
+                                        </span>
+                                    </a>
+                                </li>
+                                <?php endforeach; ?>
+                                <?php endif; ?>
+                            </ul>
+                        </div>
+                    </div>
+                </li>
+                <!-- /Dropdown Notifications -->
+                <!-- Dropdown Todo List -->
+                <li class="nav-item p-4 hidden-xs hidden-sm">
+                    <a class="nav-link" href="javascript:void(0)" data-toggle="dropdown"><i class="icon-coin-dollar" aria-hidden="true"></i><span class="badge badge-navbar badge-pill badge-secondary"><?php echo $this->Data()->CountWithdraw()['send']; ?></span></a>
+                    <div class="dropdown-menu dropdown-card">
+                        <div class="card">
+                            <div class="card-header p-3 d-flex justify-content-between">
+                                Yêu cầu rút tiền<span class="badge badge-navbar-dropdown badge-card badge-pill badge-secondary"><?php echo $this->Data()->CountWithdraw()['send']; ?></span>
+                            </div>
+                            <ul class="list-unstyled p-3 text-white dropdown-list-group">
+                                <?php if($this->Data()->RequestWithdraw()): ?>
+                                <?php foreach($this->Data()->RequestWithdraw() as $k => $v): ?>
+                                <li>
+                                    <a class="media" href="<?php echo $this->url('zflex').'#withdraw'; ?>">
+                                        <span class="d-flex">
+                                            <?php if($v->getIsSend() == 1): ?>
+                                                <i class="icon-checkmark3 todo-icon"></i>
+                                            <?php else: ?>
+                                                <i class="icon-bell3 todo-icon"></i>
+                                            <?php endif; ?>
+                                        </span>
+                                        <span class="media-body ml-2">
+                                            <p class="media-heading m-0"><?php echo $v->getCustomer()->getFbName(); ?></p>
+                                            <p class="media-content m-0"><?php echo $v->getNote(); ?></p>
+                                        </span>
+                                    </a>
+                                </li>
+                                <?php endforeach; ?>
+                                <?php endif; ?>
+                            </ul>
+                        </div>
+                    </div>
+                </li>
+                <!-- /Dropdown Todo List -->
+                <!-- Dropdown User -->
+                <li class="nav-item mr-2 d-flex align-self-stretch align-items-center li-user">
+                    <a class="nav-link" href="javascript:void(0)" data-toggle="dropdown">
+                        <img src="<?php echo $this->user->getImage() ?>" class="rounded-circle img-navbar">
+                    </a>
+                    <div class="dropdown-menu dropdown-card dropdown-card-user">
+                        <div class="card">
+                            <div class="card-header p-3 d-flex justify-content-between align-items-center">
+                                    <?php 
+                                        echo $this->user->getUsername();
+                                        echo " - ";
+                                        echo $this->user->getPermission()->getName();
+                                    ?> 
+                                <a href="<?php echo $this->url('zflex/auth',array('action' => 'logout')); ?>" class="btn btn-outline-secondary logout"><i class="icon-switch mr-2"></i>Đăng xuất</a>
+                            </div>
+                            <ul class="list-unstyled p-3 text-white dropdown-list-group">
+                                <li>
+                                    <a class="media" href="<?php echo $this->url('zflex/member',array('action'=>'edit','id' => $this->user->getId())); ?>">
+                                        <span class="d-flex">
+                                            <i class="icon-profile todo-icon"></i>
+                                        </span>
+                                        <span class="media-body ml-2">
+                                            <p class="media-heading m-0">Thông tin</p>
+                                            <p class="media-content m-0">Xem và chỉnh sửa thông tin</p>
+                                        </span>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="media" href="https://sv.gamebank.vn/nap-the/48190/vulinh2k">
+                                        <span class="d-flex">
+                                            <i class="icon-cash todo-icon"></i>
+                                        </span>
+                                        <span class="media-body ml-2">
+                                            <p class="media-heading m-0">Ủng hộ</p>
+                                            <p class="media-content m-0">Ủng hộ cho người viết code</p>
+                                        </span>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="media" href="javascript:void(0)">
+                                        <span class="d-flex">
+                                            <i class="icon-versions todo-icon"></i>
+                                        </span>
+                                        <span class="media-body ml-2">
+                                            <p class="media-heading m-0">Version</p>
+                                            <p class="media-content m-0">Version 1.0.0</p>
+                                        </span>
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </li>
+                <!-- /Dropdown User -->
+            </ul>
+            <!-- /Navbar Right Small-->
+        </div>
+        <!-- /Navbar Left -->
+    </nav>
+    <!-- /Navbar -->
+    <!-- Content Wrapper -->
+    <div class="content-wrapper">
+        <!-- Site Sidebar -->
+        <div class="site-sidebar">
+            <?php echo $this->Layout()->Menu($this->acl,$this->role); ?>
+        </div>
+        <!-- /Site Sidebar -->
+        <!-- Main Wrapper -->
+        <div class="main-wrapper">
+            <?php echo $this->Layout()->Breadcrumbs($this->controller); ?>
+            <?php echo $this->content; ?>
+             <div class="page-footer">
+                <div class="page-footer-inner">
+                    <div class="row">
+                        <div class="col-md-6">
+                            Copyright 2017 © ZFLEX. Version: <span>1.0.0</span> . Based at Zend Framework 2
+                        </div>
+                        <div class="col-md-6 text-right page">
+                           
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- /Main Wrapper -->
+    </div>
+    <!-- /Content Wrapper -->
+
+    <!-- Scripts -->
+    <?php echo $this->headScript()
+        ->prependFile($this->basePath() . '/js/script.js')
+        ->prependFile($this->basePath() . '/plugin/sortable/Sortable.min.js')
+        ->prependFile($this->basePath() . '/plugin/perfect-scrollbar/js/perfect-scrollbar.jquery.min.js')
+        ->prependFile($this->basePath() . '/plugin/nestable/jquery.nestable.js')
+        ->prependFile($this->basePath() . '/plugin/alertify.js')
+        ->prependFile('https://cdnjs.cloudflare.com/ajax/libs/raphael/2.1.0/raphael-min.js')
+        ->prependFile('https://cdnjs.cloudflare.com/ajax/libs/morris.js/0.5.1/morris.min.js')
+        ->prependFile($this->basePath() . '/js/respond.min.js', 'text/javascript', array('conditional' => 'lt IE 9',))
+        ->prependFile($this->basePath() . '/js/html5shiv.js',   'text/javascript', array('conditional' => 'lt IE 9',))
+        ->prependFile("https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/js/bootstrap.min.js")
+        ->prependFile('https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js')
+        ->prependFile('https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.4/js/select2.min.js')
+        ->prependFile('https://cdnjs.cloudflare.com/ajax/libs/dropzone/5.2.0/dropzone.js')
+        ->prependFile('http://cdnjs.cloudflare.com/ajax/libs/waypoints/2.0.3/waypoints.min.js')
+        ->prependFile("https://unpkg.com/sweetalert/dist/sweetalert.min.js")
+        ->prependFile($this->basePath() . '/plugin/jquery.counterup.min.js')
+        ->prependFile('http://jedfoster.com/js/readmore.min.js')
+        ->prependFile('https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.1.25/jquery.fancybox.min.js')
+        ->prependFile('//cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.11.1/bootstrap-table.min.js')
+        ->prependFile($this->basePath() . '/plugin/jquery-ui.js')
+        ->prependFile($this->basePath() . '/plugin/jquery.min.js')
+    ; ?>
+    <?php echo $this->inlineScript() ?>
+    <script type="text/javascript">
+        $(document).ready(function(){
+        $(".js-dropzone-upload").dropzone({ 
+            <?php $media_add = $this->url('zflex/media',array('action' => 'add')); ?>
+            url: "<?php echo $media_add; ?>",
+            acceptedFiles:'image/*',
+            success: function (file, response) {
+               this.removeFile(file);
+               $(".box-media").load(location.href + " .box-media>*");
+               alertify.success("Thêm thành công ảnh : '" +file.name + "'");
+            }
+        });
+        $(".gallery-delete").on('click',function(){
+            if($(".media-item.clicked").hasClass('media-item-modal'))
+            {
+                alertify.confirm("Bạn có chắc muốn xóa những hình ảnh đã chọn ?", function () {
+                    var arr = [];
+                    $(".media-item-modal.clicked").each(function() {
+                        filename = $(this).find('img').attr('data-image-name');
+                        arr.push(filename);
+                    });
+                    $.ajax({
+                        type:"POST",
+                        url:"<?php echo $this->url('zflex/media',array('action' => 'load-delete')); ?>",
+                        data:{data : arr},
+                        dataType: 'json',
+                        success: function(data){
+                            console.log(data.result);
+                            if(data.result == 'ok'){
+                                $(".box-media-"+id_media).load(location.href + " .box-media-"+id_media+">*");
+                                alertify.success("Xóa thành công !");
+                            }
+                        },
+                   });
+                });
+            }
+            else if($(".media-item.clicked").hasClass('media-item-folder'))
+            {
+                alertify.confirm("Bạn có chắc muốn xóa thư mục đã chọn ?", function () {
+                    var name = $(".media-item-folder.clicked").data('name');
+                    $.ajax({
+                        type:"POST",
+                        url:"<?php echo $this->url('zflex/media',array('action' => 'load-delete-folder')); ?>",
+                        data:{name : name},
+                        dataType: 'json',
+                        success: function(data){
+                            console.log(data.result);
+                            $(".box-media-"+id_media).load(location.href + " .box-media-"+id_media+">*");
+                        },
+                   });
+                });
+            }
+            
+        });
+        $(".gallery-create-folder").on('click',function(){
+            var name = prompt("Tên thư mục mới : ", "");
+            if (name == null || name == "") {
+            } else {
+                $.ajax({
+                    type:"POST",
+                    url:"<?php echo $this->url('zflex/media',array('action' => 'create-folder')); ?>",
+                    data:{name : name},
+                    dataType: 'json',
+                    success: function(data){
+                        console.log(data.result);
+                        if(data.result != '' || data.result != null){
+                            $(".box-media-"+id_media).load(location.href + " .box-media-"+id_media+">*");
+                        }
+                    },
+               });
+            }
+        });
+        $(".gallery-rename").on('click',function(){
+            var value = $(".media-item.clicked").data('name');
+            var name = prompt("Tên thư mục mới : ", value);
+            if (name == null || name == "") {
+            } else {
+                $.ajax({
+                    type:"POST",
+                    url:"<?php echo $this->url('zflex/media',array('action' => 'rename')); ?>",
+                    data:{old_name : value,new_name : name},
+                    dataType: 'json',
+                    success: function(data){
+                        console.log(data.result);
+                        if(data.result != '' || data.result != null){
+                            $(".box-media-"+id_media).load(location.href + " .box-media-"+id_media+">*");
+                        }
+                    },
+               });
+            }
+        });
+        $(".withdraw").click(function(){
+            var id = $(this).data('id');
+            var _this = this;
+            $.ajax({
+                type:"POST",
+                url:"<?php echo $this->url('zflex/ajax',array('action' => 'withdraw')); ?>",
+                data:{id:id},
+                dataType: 'json',
+                success: function(data){
+                    result = data.result;
+                    if(result == true)
+                    {
+                        $(_this).parent('td').html('<i class="icon-checkmark3 d-block"></i>');
+                    }   
+                }
+           });
+        });
+        $(".read-report").click(function(){
+            var id = $(this).data('id');
+            var _this = this;
+            $.ajax({
+                type:"POST",
+                url:"<?php echo $this->url('zflex/ajax',array('action' => 'read-report')); ?>",
+                data:{id:id},
+                dataType: 'json',
+                success: function(data){
+                    result = data.result;
+                    if(result == true)
+                    {
+                        $(_this).parent('td').html('<i class="icon-checkmark3 d-block"></i>');
+                    }   
+                }
+           });
+        });
+        $(".btn-lock").click(function(){
+            swal("Lý do", {
+              content: "input",
+              buttons: ["Không","Khóa"],
+            })
+            .then((value) => {
+                if(value)
+                {
+                    $.ajax({
+                        type:"POST",
+                        url:"<?php echo $this->url('zflex/customer',array('action' => 'lock')); ?>",
+                        data:{id: $(this).data('id'),value: value},
+                        dataType: 'json',
+                        success: function(data){
+                            swal(`Khóa thành công ! Lý do: ${value}`).then((ok) => {
+                              if (ok) {
+                                location.reload();
+                              }else{
+                                location.reload();
+                              }
+                            });
+                        },
+                    });
+                }
+            });
+        });
+        $('.box-media').on('dblclick','.media-item-folder',function(){
+            var dir = $(this).data('media-dir');
+            $.ajax({
+                type:"POST",
+                url:"<?php echo $this->url('zflex/media',array('action' => 'load')); ?>",
+                data:{dir: dir},
+                dataType: 'json',
+                success: function(data){
+                    console.log(data.result);
+                    $(".box-media-"+id_media).load(location.href + " .box-media-"+id_media+">*");
+                },
+           });
+        })
+        })
+    </script>
+</body>
+
+</html>

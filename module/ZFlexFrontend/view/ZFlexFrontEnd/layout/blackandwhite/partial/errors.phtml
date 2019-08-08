@@ -1,0 +1,13 @@
+<?php if($this->errors): ?>
+<div class="ui error message">
+  <i class="close icon"></i>
+  <div class="header">
+    Lỗi !
+  </div>
+  <ul class="list">
+  	<?php foreach($this->errors as $error): ?>
+    <li><?php echo $error; ?></li>
+	<?php endforeach; ?>
+  </ul>
+</div>
+<?php endif; ?>

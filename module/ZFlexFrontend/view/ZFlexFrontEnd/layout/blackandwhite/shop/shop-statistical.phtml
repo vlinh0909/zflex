@@ -1,0 +1,75 @@
+<?php echo $this->headTitle("Thống Kê") ?>
+
+<article class="ui container wrapper">    
+    <?php echo $this->partial('partial/nav_shop'); ?>
+
+    <script type="text/javascript">
+window.onload = function () {
+var chart = new CanvasJS.Chart("chartContainer", {
+	theme: "light1", // "light2", "dark1", "dark2"
+	animationEnabled: true, // change to true	
+	title:{
+		text: "Doanh thu theo ngày",
+		fontFamily: "tahoma"
+	},
+	axisY: {
+		title: "Việt Nam Đồng",
+		titleFontSize: 20,
+		titleFontFamily: "tahoma"
+	},
+	legend:{   //legend properties
+ 		text: "Việt Nam Đồng"
+ 
+ 	},
+	data: [
+	{
+		// Change type to "bar", "area", "spline", "pie",etc.
+		type: "column",
+		dataPoints: [
+			{ label: "<?php echo (string) $this->static['day_6'] ?>",  y: <?php echo $this->money[6] ?> ,color: '#414345' },
+			{ label: "<?php echo (string) $this->static['day_5'] ?>", y: <?php echo $this->money[5] ?>,color: '#414345'  },
+			{ label:"<?php echo (string) $this->static['day_4'] ?>", y: <?php echo $this->money[4] ?>,color: '#414345'  },
+			{ label: "<?php echo (string) $this->static['day_3'] ?>",  y: <?php echo $this->money[3] ?>,color: '#414345'  },
+			{ label: "<?php echo (string) $this->static['day_2'] ?>",  y: <?php echo $this->money[2] ?>,color: '#414345'  },
+			{ label: "<?php echo (string) $this->static['day_1'] ?>",  y: <?php echo $this->money[1] ?>,color: '#414345'  },
+			{ label: "<?php echo (string) $this->static['day_0'] ?>",  y: <?php echo $this->money[0] ?>,color: '#414345'  }
+		]
+	}
+	]
+});
+var chart2 = new CanvasJS.Chart("chartContainer2", {
+	theme: "light1", // "light2", "dark1", "dark2"
+	animationEnabled: true, // change to true		
+	title:{
+		text: "Lượt thuê theo ngày",
+		fontFamily: "tahoma"
+	},
+	axisY: {
+		title: "Lượt Thuê",
+		titleFontSize: 20,
+		titleFontFamily: "tahoma"
+	},
+	data: [
+	{
+		// Change type to "bar", "area", "spline", "pie",etc.
+		type: "column",
+		dataPoints: [
+			{ label: "<?php echo (string) $this->static['day_6'] ?>",  y: <?php echo $this->total[6] ?> ,color: '#414345' },
+			{ label: "<?php echo (string) $this->static['day_5'] ?>", y: <?php echo $this->total[5] ?>,color: '#414345'  },
+			{ label:"<?php echo (string) $this->static['day_4'] ?>", y: <?php echo $this->total[4] ?>,color: '#414345'  },
+			{ label: "<?php echo (string) $this->static['day_3'] ?>",  y: <?php echo $this->total[3] ?>,color: '#414345'  },
+			{ label: "<?php echo (string) $this->static['day_2'] ?>",  y: <?php echo $this->total[2] ?>,color: '#414345'  },
+			{ label: "<?php echo (string) $this->static['day_1'] ?>",  y: <?php echo $this->total[1] ?>,color: '#414345'  },
+			{ label: "<?php echo (string) $this->static['day_0'] ?>",  y: <?php echo $this->total[0] ?>,color: '#414345'  }
+		]
+	}
+	]
+});
+chart.render();
+chart2.render();
+
+}
+</script>
+	<div id="chartContainer" style="height: 370px; width: 100%;"></div>
+	<div id="chartContainer2" style="height: 370px; width: 100%;"></div>
+</article>

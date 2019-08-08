@@ -1,0 +1,209 @@
+<?php echo $this->headTitle("Dashboard") ?>
+<div class="widget-list">
+  <div class="row">
+    <div class="col-md-3 col-12 mt-3">
+      <div class="widget text-white" style="background-color:gray;">
+        <div class="widget-heading">
+          <p class="widget-title m-0">Số sản phẩm</p>
+          <i class="icon-cart4 widget-icon"></i>
+        </div><p class="widget-value"> 
+          <span class="counter"><?php echo $this->Data()->CountRent(); ?></span></p>
+          <a href="https://facebook.com" class="widget-footer">Chi tiết<i class="fa fa-arrow-circle-right"></i></a>
+        </div>
+      </div>
+      <div class="col-md-3 col-12 mt-3">
+        <div class="widget text-white" style="background-color:gray;">
+          <div class="widget-heading">
+            <p class="widget-title m-0">Thành viên</p><i class="icon-users widget-icon"></i>
+          </div>
+          <p class="widget-value"> <span class="counter"><?php echo $this->Data()->CountCustomer(); ?></span> </p>
+          <a href="https://google.com" class="widget-footer">Chi tiết<i class="fa fa-arrow-circle-right"></i></a>
+        </div>
+      </div>
+      <div class="col-md-3 col-12 mt-3">
+        <div class="widget text-white" style="background-color:gray;">
+          <div class="widget-heading"><p class="widget-title m-0">Ban quản trị</p><i class="icon-user-tie widget-icon"></i>
+          </div>
+          <p class="widget-value"> <span class="counter"><?php echo $this->Data()->CountMember(); ?></span></p>
+          <a href="https://twitter.com" class="widget-footer">Chi tiết<i class="fa fa-arrow-circle-right"></i></a>
+        </div>
+      </div>
+      <div class="col-md-3 col-12 mt-3">
+        <div class="widget text-white" style="background-color:gray;">
+          <div class="widget-heading"><p class="widget-title m-0">Số Shop</p><i class="icon-cart4 widget-icon"></i></div><p class="widget-value"> <span class="counter"><?php echo $this->Data()->CountShop(); ?></span> </p><a href="https://instagram.com" class="widget-footer">Chi tiết<i class="fa fa-arrow-circle-right"></i></a>
+        </div>
+      </div>
+    </div>
+  </div>
+      <div class="row">
+          <div class="col-12 col-sm-6">
+              <div class="box bg-white mt-3" id="reportShop">
+                  <div class="box-heading">
+                      <p class="lead">Tố cáo shop</p>
+                      <p class="btn-close">
+                          <i class="fa fa-angle-down" aria-hidden="true"></i>
+                      </p>
+                  </div>
+                  <div class="box-body">
+                      <table class="table table-responsive table-bordered m-0" data-toggle="table" data-pagination="true" data-search="true">
+                        <thead>
+                            <tr>
+                                <th>Thời gian</th>
+                                <th>Tố cáo shop</th>
+                                <th>Người tố cáo</th>
+                                <th width="40%">Nội dung</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                          <?php if($this->Data()->ReportShop()): ?>
+                          <?php foreach($this->Data()->ReportShop() as $k => $v): ?>
+                          <tr>
+                            <td><?php echo \Carbon\Carbon::parse($v->getTimeCreated())->format('H:i:s d/m/Y'); ?></td>
+                            <td><a href="<?php echo $this->url('shop_info',array('id'=>$v->getShop()->getId())); ?>" target="_blank"><?php echo $v->getShop()->getShopName(); ?></a> - <a href="<?php echo $this->url('zflex/customer',array('action' => 'edit','id'=> $v->getShop()->getCustomer()->getId())); ?>" target="_blank"><?php echo $v->getShop()->getCustomer()->getFbName(); ?></a></td>
+                            <td><a href="<?php echo $this->url('zflex/customer',array('action' => 'edit','id'=> $v->getCustomer()->getId())); ?>" target="_blank"><?php echo $v->getCustomer()->getFbName(); ?></a></td>
+                            <td><?php echo $v->getMessage(); ?></td>
+                            <?php if($v->getIsRead() == 0): ?>
+                            <td class="text-center" data-toggle="tooltip" data-placement="top" title="xử lý ngay!"><i data-id="<?php echo $v->getId(); ?>" class="icon-radio-unchecked d-block read-report" style="cursor: pointer;"></i></td>
+                            <?php else: ?>
+                            <td class="text-center" data-toggle="tooltip" data-placement="top" title="đã được xử lý"><i class="icon-checkmark3 d-block"></i></td>
+                          <?php endif; ?>
+                          </tr>
+                          <?php endforeach; ?>
+                          <?php endif; ?>
+                        </tbody>
+                    </table>    
+                  </div>
+              </div>
+          </div>
+
+          <div class="col-12 col-sm-6">
+              <div class="box bg-white mt-3" id="withdraw">
+                  <div class="box-heading">
+                      <p class="lead">Yêu cầu rút tiền</p>
+                      <p class="btn-close">
+                          <i class="fa fa-angle-down" aria-hidden="true"></i>
+                      </p>
+                  </div>
+                  <div class="box-body">
+                    <table class="table table-responsive table-bordered m-0" data-toggle="table" data-pagination="true" data-search="true">
+                        <thead>
+                            <tr>
+                                <th>Thời gian</th>
+                                <th>Người yêu cầu</th>
+                                <th>Số tiền</th>
+                                <th>Ghi chú</th>
+                                <th width="35%">Thông tin</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                          <?php if($this->Data()->RequestWithdraw()): ?>
+                          <?php foreach($this->Data()->RequestWithdraw() as $k => $v): ?>
+                          <tr>
+                            <td><?php echo \Carbon\Carbon::parse($v->getTimeCreated())->format('H:i:s d/m/Y'); ?></td>
+                            <td><a href="<?php echo $this->url('zflex/customer',array('action' => 'edit','id'=> $v->getCustomer()->getId())); ?>" target="_blank"><?php echo $v->getCustomer()->getFbName(); ?></a></td>
+                            <td><?php echo number_format($v->getMoney()); ?></td>
+                            <td><?php echo $v->getNote(); ?></td>
+                            <td>
+                              <div class="readmore">
+                                <?php $bank = $this->Data()->Bank();?>
+                                <p>Ngân hàng : <?php echo $bank[$v->getCustomer()->getShop()->getBank()] ?></p>
+                                <p>Số tài khoản : <?php echo $v->getCustomer()->getShop()->getStkBank(); ?></p>
+                                <p>Chủ tài khoản : <?php echo $v->getCustomer()->getShop()->getCtkBank(); ?></p>
+                                <p>Số điện thoại : <?php echo $v->getCustomer()->getShop()->getPhoneNumber(); ?></p>
+                              </div>
+                            </td>
+                            <?php if($v->getIsSend() == 0): ?>
+                            <td class="text-center" data-toggle="tooltip" data-placement="top" title="chuyển tiền ngay !"><i data-id="<?php echo $v->getId(); ?>" class="icon-radio-unchecked d-block withdraw" style="cursor: pointer;"></i></td>
+                            <?php else: ?>
+                            
+                            <td class="text-center withdraw" data-toggle="tooltip" data-placement="top" title="đã được chuyển tiền"><i class="icon-checkmark3 d-block"></i></td>
+                          <?php endif; ?>
+                          </tr>
+                          <?php endforeach; ?>
+                          <?php endif; ?>
+                        </tbody>
+                    </table>    
+                  </div>
+              </div>
+          </div>
+          <div class="col-12 col-sm-6">
+              <div class="box bg-white mt-3" id="withdraw">
+                  <div class="box-heading">
+                      <p class="lead">Các nghi vấn website</p>
+                      <p class="btn-close">
+                          <i class="fa fa-angle-down" aria-hidden="true"></i>
+                      </p>
+                  </div>
+                  <div class="box-body">
+                    <table class="table table-fixed table-responsive table-bordered m-0">
+                        <thead>
+                            <tr>
+                              <td>LOGGER</td>
+                            </tr>
+                        </thead>
+                        <tbody>
+                          <?php $handle = fopen('./data/log/hacker_bug.log','r') or die ('File opening failed'); 
+                          $hacker_bug =  nl2br(fread($handle,filesize('./data/log/hacker_bug.log')));
+                          $array = array_reverse(explode("\n",$hacker_bug));
+                          ?>
+                          <?php foreach($array as $k => $v): ?>
+                            <?php if(!empty($v)): ?>
+                              <tr>
+                                <td><strong><?php echo $v; ?></strong></td>
+                              </tr>
+                            <?php endif; ?>
+                          <?php endforeach; ?>
+                        </tbody>
+                    </table>    
+                  </div>
+              </div>
+          </div>
+          <div class="col-12 col-sm-6">
+              <div class="box bg-white mt-3" id="withdraw">
+                  <div class="box-heading">
+                      <p class="lead">Lịch sử đăng nhập</p>
+                      <p class="btn-close">
+                          <i class="fa fa-angle-down" aria-hidden="true"></i>
+                      </p>
+                  </div>
+                  <div class="box-body">
+                    <table class="table table-fixed table-responsive table-bordered m-0">
+                        <thead>
+                            <tr>
+                              <td>LOGGER</td>
+                            </tr>
+                        </thead>
+                        <tbody>
+                          <?php $handle2 = fopen('./data/log/login_history.log','r') or die ('File opening failed'); 
+                          $history_login =  nl2br(fread($handle2,filesize('./data/log/login_history.log')));
+                          $array2 = array_reverse(explode("\n",$history_login));
+                          ?>
+                          <?php foreach($array2 as $k => $v2): ?>
+                            <?php if(!empty($v2)): ?>
+                              <tr>
+                                <td><strong><?php echo $v2; ?></strong></td>
+                              </tr>
+                            <?php endif; ?>
+                          <?php endforeach; ?>
+                        </tbody>
+                    </table>    
+                  </div>
+              </div>
+          </div>
+      </div>
+      
+
+<!-- 
+<div class="box bg-white mt-3">
+	<div class="box-heading">
+		<p class="lead">Thống kê tuần</p>
+		<p class="btn-close">
+			<i class="fa fa-angle-down" aria-hidden="true"></i>
+		</p>
+	</div>
+	<div class="box-body">
+		<div id="game" style="height: 250px;"></div>
+	</div>
+</div> -->

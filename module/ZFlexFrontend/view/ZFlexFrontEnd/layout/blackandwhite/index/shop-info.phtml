@@ -1,0 +1,487 @@
+<?php echo $this->headTitle($this->shop->getShopName()) ?>
+<?php 
+$url_ajax_cm = $this->url('ajax',array('action' => 'load-send-comment'));
+$url_ajax = $this->url('ajax',array('action' => 'load-rent'));
+$url_ajax_report = $this->url('ajax',array('action' => 'load-send-report'));
+$url_ajax_rent = $this->url('ajax',array('action' => 'load-shop'));
+$url_ajax_login = $this->url('login');
+$url_ajax_history_rent = $this->url('history_rent');
+$url_ajax_card = $this->url('card');
+
+$this->inlineScript()->captureStart();
+ 
+echo <<<JS
+
+function htmlSuccess(title = 'THUÊ TÀI KHOẢN',value = 'THUÊ THÀNH CÔNG',is_button = 1)
+    {
+      var xhtml ='';
+      xhtml += '<div id="popupR">';
+      xhtml += '<h4 class="text-center" >'+title+'</h4>';
+      xhtml += '<div class="hr"></div>';
+      xhtml += '<h3 class="text-center"><strong>'+value+'</strong></h3>';
+      if(is_button == 1)
+      {
+        xhtml += '<div class="text-center w-100">';
+          xhtml += '<a href="$url_ajax_history_rent" class="ui button large black mb-15">VÀO LỊCH SỬ GIAO DỊCH</a>';
+        xhtml += '</div>';
+      }else if(is_button == 'login'){
+        xhtml += '<div class="text-center w-100">';
+          xhtml += '<a href="$url_ajax_login" class="ui button large black mb-15">ĐĂNG NHẬP</a>';
+        xhtml += '</div>';
+      }else if(is_button == false)
+      {
+        xhtml += '<div class="text-center w-100">';
+          xhtml += '<button id="close" class="ui button fluid black mb-15">ĐÓNG</button>';
+        xhtml += '</div>';
+      }
+      xhtml += '</div>';
+      return xhtml;
+    }
+
+    function htmlError(data = 'THUÊ TÀI KHOẢN')
+    {
+      var xhtml ='';
+      xhtml += '<div id="popupR">';
+      xhtml += '<h4 class="text-center" >'+data+'</h4>';
+      xhtml += '<div class="hr"></div>';
+      xhtml += '<h3 class="text-center"><strong>KHÔNG ĐỦ TIỀN</strong></h3>';
+      xhtml += '<div class="text-center w-100">';
+        xhtml += '<a href="$url_ajax_card" class="ui button large black mb-15">NẠP TIỀN</a>';
+      xhtml += '</div>';
+      xhtml += '</div>';
+      return xhtml;
+    }
+  $(".filter-left .btn-filter-rent").click(function(){
+      page = 1;
+      $(".filter-left .btn-filter-rent").removeClass("active");
+      $(this).addClass("active");
+      var game = strip_tags($(this).data('game'));
+      current_game = strip_tags(game);
+      $.ajax({
+        type: 'POST',
+        url: '$url_ajax',
+        beforeSend: function() {
+            $(".loader-rent").addClass("active");
+        },
+        data: { game: game,ready : is_ready,page:page,customer_id: customer_id},
+        success: function(data)
+        {
+          var result = data.result;
+          $("#count_sansang").text(data.count.rent_sansang);
+          $("#count_dathue").text(data.count.rent_dathue);
+          $(".div-rent > div:not(.loader-rent)").remove();
+          if(is_ready == 1)
+          {
+            $.each(result, function(i, value) {
+              $(".div-rent").append(htmlAjaxRent(value));
+            });
+          }else{
+            $.each(result, function(i, value) {
+              $(".div-rent").append(htmlAjaxRent2(value));
+            });
+          }
+        },
+        complete: function() {
+            $(".loader-rent").removeClass("active");
+          $('.special.cards .image').dimmer({
+          on: 'hover'
+          });
+          $('.ui.dropdown').dropdown();
+          if(is_ready == 2)
+          {
+            rent_time_format();
+          }
+        },
+        dataType: 'json'
+      });
+    });
+
+    $(".filter-right .btn-filter").click(function(){
+      page = 1;
+      $(".filter-right .btn-filter").removeClass("active");
+      $(this).addClass("active");
+      var ready = strip_tags($(this).data('ready'));
+      is_ready = strip_tags(ready);
+      $.ajax({
+        type: 'POST',
+        url: '$url_ajax',
+        beforeSend: function() {
+            $(".loader-rent").addClass("active");
+        },
+        data: { game: current_game,ready : ready,page:page,customer_id : customer_id},
+        success: function(data)
+        {
+          var result = data.result;
+          $("#count_sansang").text(data.count.rent_sansang);
+          $("#count_dathue").text(data.count.rent_dathue);
+          $(".div-rent > div:not(.loader-rent)").remove();
+          if(is_ready == 1)
+          {
+            $.each(result, function(i, value) {
+              $(".div-rent").append(htmlAjaxRent(value));
+            });
+          }else{
+            $.each(result, function(i, value) {
+              $(".div-rent").append(htmlAjaxRent2(value))
+            });
+          }
+        },
+        complete: function() {
+          $(".loader-rent").removeClass("active");
+          $('.special.cards .image').dimmer({
+          on: 'hover'
+          });
+          $('.ui.dropdown').dropdown();
+          if(is_ready == 2)
+          {
+            rent_time_format();
+          }
+        },
+        dataType: 'json'
+      });
+    });
+    $(".btn-more").click(function(){
+        page = strip_tags(page + 1);
+        $.ajax({
+          type: 'POST',
+          url: "$url_ajax",
+          beforeSend: function() {
+              $(".loader-rent").addClass("active");
+          },
+          data: { game: current_game,ready : is_ready,page:page,customer_id: customer_id},
+          success: function(data)
+          {
+            var flag = false;
+            var result = data.result;
+            if(result.length == 0)
+            {
+              flag = true;
+            }
+            
+            if(is_ready == 1)
+            {
+              $.each(result, function(i, value) {
+              if($(".btn-rent[data-id="+value.id+"]").length == 1)
+              {
+                flag = true;
+              }else{
+                $(".div-rent").append(htmlAjaxRent(value));
+              }
+            });
+            }else{
+              $.each(result, function(i, value) {
+              if($(".btn-rent[data-id="+value.id+"]").length == 1)
+              {
+                flag = true;
+              }else{
+                $(".div-rent").append(htmlAjaxRent2(value));
+              }
+            });
+            }
+            if(flag == true)
+            {
+              swal("Thông báo !", "Đã load hết tài khoản !", "warning");
+            }
+          },
+          complete: function() {
+            $(".loader-rent").removeClass("active");
+            $('.special.cards .image').dimmer({
+            on: 'hover'
+            });
+            $('.ui.dropdown').dropdown();
+            if(is_ready == 2)
+            {
+              rent_time_format();
+            }
+          },
+          dataType: 'json'
+        });
+    });
+  $(".comments").on('click','.btn-send-comment',function(){
+    var _this = this;
+    var val = strip_tags($(this).prev().find("textarea").val());
+    var rep_id = strip_tags($(this).data('rep-id'));
+    if(rep_id == 0){
+      var rating = strip_tags($(".rating").rating('get rating'));
+    }else{
+      var rating = 0;
+    }
+    $.ajax({
+      type: 'POST',
+      url: "$url_ajax_cm",
+      beforeSend: function() {
+          $(".loader-comment").addClass("active");
+      },
+      data: { rep_id: rep_id,val: val,shop_id: shop_id,rating: rating},
+      success: function(data)
+      {
+        var result = data.result;
+        if(result != false && result != 'cannot' && result != 'commented' && result != '' && result != 'not_login'){
+          if(rep_id == 0){
+            $("#list_comments").prepend(htmlComment(result,rep_id));
+          }else{
+            $(".content[data-rep-id="+rep_id+"]").append(htmlComment(result,rep_id));
+          }
+          if($("#empty_comments")[0]){
+            $("#empty_comments").remove();
+          }
+          
+        }else if(result == 'cannot'){
+          alert("Bạn không thể đánh giá shop của mình");
+        }else if(result == 'commented'){
+          alert("Bạn chỉ được đánh giá shop một lần !");
+        }else if(result == false){
+          alert("Bạn chưa từng thuê acc ở shop này nên không thể đánh giá !");
+        }else if(result == 'not_login'){
+          alert("Bạn chưa đăng nhập !");
+        }
+      },
+      dataType: 'json',
+      complete: function(){
+        $(".loader-comment").removeClass("active");
+        $(_this).prev().find("textarea").val('');
+      }
+    });
+  });
+  $("#popupInfo").on('click','#btn-report-shop',function(){
+      var val = strip_tags($("#message-report").val());
+      if(val != '')
+      {
+        $.ajax({
+          type: 'POST',
+          url: "$url_ajax_report",
+          beforeSend: function() {
+              $("#popupInfo").html(htmlLoad());
+          },
+          data: { shop_id: shop_id,val: val},
+          success: function(data)
+          {
+            var result = data.result;
+            
+            if(result == 'not_login')
+            {
+              $("#popupInfo").html(htmlSuccess('TỐ CÁO SHOP','BẠN CHƯA ĐĂNG NHẬP !','login'));
+            }else if(result == false){
+              $("#popupInfo").html(htmlSuccess('TỐ CÁO SHOP','BẠN CHƯA TỪNG THUÊ ACC Ở SHOP NÀY NÊN KHÔNG THỂ TỐ CÁO !',false));
+            }else if(result == true){
+              $("#popupInfo").html(htmlSuccess('TỐ CÁO SHOP','TỐ CÁO THÀNH CÔNG ! LÝ DO : '+val,false));
+            }else if(result == 'reported'){
+              $("#popupInfo").html(htmlSuccess('TỐ CÁO SHOP','BẠN KHÔNG THỂ TỐ CÁO SHOP THÊM NỮA !',false));
+            }else if(result == 'cannot'){
+              $("#popupInfo").html(htmlSuccess('TỐ CÁO SHOP','BẠN KHÔNG THỂ TỐ CÁO CHÍNH SHOP CỦA MÌNH !',false));
+            }
+            move_center('#popupCenter');
+          },
+          dataType: 'json'
+        });
+      }else{
+        alert("Bạn chưa nhập nội dung !");
+      }
+    });
+    $(".div-rent").on('click','.btn-rent',function(){
+      var id = strip_tags($(this).data('id'));
+      var value = strip_tags($(this).parents('.extra.content').prev('.content').find('select').val());
+      var price = strip_tags($(this).parents('.extra.content').prev('.content').find('.money_'+value).val());
+      var img = strip_tags($(this).parents('.extra.content').prevAll('.image').find('img').attr('src'));
+      $.post("$url_ajax_rent", { id: id})
+      .done(function(data) {
+        var result = data.result;
+        var data = {id: id,game: result.game,time: value,price: price,shop: result.shop,url_shop: result.url_shop,img: img};
+        $("#popupInfo").html(htmlRent(data));
+        move_center('#popupCenter');
+      });
+
+      $("#popupBg").show();
+    });
+JS;
+$this->inlineScript()->captureEnd(); ?>
+<div class="ui modal">
+  <div class="header">NHỮNG ĐÁNH GIÁ VỀ SHOP</div>
+  <div class="content">
+    <div class="ui comments">
+    	<div class="ui inverted dimmer loader-comment">
+            <div class="ui loader"></div>
+          </div>
+        <div id="list_comments">
+        	
+        	<?php $avg = 0;
+        	$stt = 0;
+        	?>
+        	<?php foreach($this->comment_shop as $k => $v): ?>
+        	<?php 
+        	if($v->getScore() != 0):
+        	$avg += $v->getScore();$stt++; 
+        	endif;
+        	if($v->getRepComment() == 0):
+        	?>
+        	<div class="comment">
+		        <a class="avatar">
+		          <img src="//graph.facebook.com/<?php echo $v->getCustomer()->getFbId(); ?>/picture">
+		        </a>
+		        <div class="content" data-rep-id="<?php echo $v->getId(); ?>">
+		          <a class="author"><?php echo $v->getCustomer()->getFbName(); ?></a>
+		          <div class="metadata">
+		            <span class="date"><?php echo \Carbon\Carbon::parse($v->getTimeCreated())->format('H:i:s d/m/Y'); ?></span>| <span><?php echo $v->getScore(); ?><i class="icon star" style="color:#ffe623;text-shadow:0 -1px 0 #ddc507,-1px 0 0 #ddc507,0 1px 0 #ddc507,1px 0 0 #ddc507!important"></i></span>
+		          </div>
+		          <div class="text">
+		            <?php echo $v->getContent(); ?>
+		          </div>
+		          <div class="actions">
+		            <a class="reply reply-click" data-rep-id="<?php echo $v->getId(); ?>">Reply</a>
+		          </div>
+		          	<form class="ui reply form form-reply">
+						<div class="field">
+						  <textarea data-rep-id="0"></textarea>
+						</div>
+						<div class="ui small submit icon button btn-send-comment" data-rep-id="<?php echo $v->getId(); ?>">TRẢ LỜI
+						</div>
+					</form>
+					<?php $frontend = $this->FrontendData(); ?>
+					<?php echo rep_comment($v->getId(),$frontend); ?>
+		        </div>
+  			</div>
+
+  			<?php 
+  			endif;
+  			endforeach; ?>
+  			<?php function rep_comment($id,$frontend){
+  				$xhtml = '';
+  				$rep_comment = $frontend->getRepComment($id);
+  				if(!empty($rep_comment)): 
+  					
+  					foreach($rep_comment as $k => $val):
+  					$xhtml .= '<div class="comment">';
+					    $xhtml .= '<a class="avatar">';
+					      $xhtml .= '<img src="//graph.facebook.com/'.$val->getCustomer()->getFbId().'/picture">';
+					    $xhtml .= '</a>';
+					    $xhtml .= '<div class="content" data-rep-id="'.$val->getId().'">';
+					      $xhtml .= '<a class="author">'.$val->getCustomer()->getFbName().'</a>';
+					      $xhtml .= '<div class="metadata">';
+					        $xhtml .= '<span class="date">'.\Carbon\Carbon::parse($val->getTimeCreated())->format('H:i:s d/m/Y').'</span>';
+					      $xhtml .= '</div>';
+					      $xhtml .= '<div class="text">';
+					       $xhtml .= $val->getContent(); 
+					      $xhtml .= '</div>';
+					      $xhtml .= '<div class="actions">';
+					        $xhtml .= '<a class="reply reply-click" data-rep-id="'.$val->getId().'">Reply</a>';
+					      $xhtml .= '</div>';
+					      $xhtml .= '<form class="ui reply form form-reply">';
+								$xhtml .= '<div class="field">';
+								  $xhtml .= '<textarea data-rep-id="'.$val->getId().'"></textarea>';
+								$xhtml .= '</div>';
+								$xhtml .= '<div class="ui small submit icon button btn-send-comment" data-rep-id="'.$val->getId().'">TRẢ LỜI';
+								$xhtml .= '</div>';
+							$xhtml .= '</form>';
+							$xhtml .= rep_comment($val->getId(),$frontend);
+					    $xhtml .= '</div>';
+				  	$xhtml .= '</div>	';
+  					endforeach;
+  					return $xhtml;
+  				endif;
+  			} ?>
+        </div>
+        <?php if(count($this->comment_shop) == 0): ?>
+    	<p id="empty_comments">Chưa có đánh giá nào về shop này</p>
+    	<?php endif; ?>
+	  	<form class="ui reply form">
+
+			<div class="field">
+			  <textarea data-rep-id="0"></textarea>
+			</div>
+			<div class="ui small submit icon button btn-send-comment" data-rep-id="0">GỬI ĐÁNH GIÁ
+			</div>
+			<div class="ui star rating"></div>
+		</form>
+	</div>
+  </div>
+</div>
+    <section class="ui container banner dimmable">
+        <img src="<?php echo $this->FrontendPath()->BannerShop($this->shop->getBanner()); ?>" class="ui image fluid">
+        <div class="hidden-sm" id="shop_info" data-shop-id="<?php echo $this->shop->getId(); ?>" style="position: absolute;
+    bottom: 30px;
+    color: white !important;
+    left: 30px;
+    background: #00000094;
+    padding: 15px;">
+        	<h3><?php echo $this->shop->getShopName(); ?></h3>
+        	<p>LƯỢT THUÊ : <?php echo $this->luotthue; ?></p>
+        	<p>ĐÁNH GIÁ : <?php echo ($this->shop->getCommentShop()->count() != 0) ? $avg / $stt : '0'; ?> SAO / <?php echo $stt; ?> LƯỢT ĐÁNH GIÁ</p>
+          <p style="font-weight: 500;color: white;cursor: pointer;" id="toggleSidebar"><i class="icon empty star"></i>XEM ĐÁNH GIÁ</p>
+        </div>
+        <div style="position: absolute;
+    bottom: 30px;
+    color: white !important;
+    right: 30px;
+    background: #00000094;
+    padding: 15px;">
+        	<p class="hidden-sm">SỐ ĐIỆN THOẠI : <?php echo $this->shop->getPhoneNumber(); ?></p>
+        	<p class="hidden-sm">FACEBOOK : <a href="<?php echo $this->shop->getUrlFacebook() ?>" target="_blank" style="color:white;"><i class="icon facebook"></i></a></p>
+        	
+          <p style="font-weight: 500;color: white;cursor: pointer;" id="open-report"><i class="icon flag outline"></i>TỐ CÁO SHOP</p>
+        </div>
+    </section>
+    <article class="ui container wrapper">
+      <section class="filter filter-rent-list" data-id="<?php echo $this->id; ?>" style="display: block;">
+        <div class="filter-left">
+          <button class="btn-filter btn-filter-rent active" data-game="home"><i class="home icon m-0"></i></button>
+          <?php foreach($this->FrontendData()->Category() as $key => $category): ?>
+            <button class="btn-filter btn-filter-rent" data-game="<?php echo $key; ?>"><?php echo $category; ?></button>
+          <?php endforeach; ?>
+        </div>
+        <div class="filter-right">
+          <button class="btn-filter active" data-ready="1"><span id="count_sansang"><?php echo $this->count['rent_sansang']; ?></span> Sẵn sàng</button>
+          <button class="btn-filter" data-ready="2"><span id="count_dathue"><?php echo $this->count['rent_dathue']; ?></span> Đang được thuê</button>
+        </div>
+      </section>
+      <div class="ui four column doubling stackable grid segment div-rent" style="clear: both;border: none;box-shadow: none;">
+          <div class="ui inverted dimmer loader-rent">
+            <div class="ui loader"></div>
+          </div>
+          <?php foreach($this->rents as $rent): ?>
+          <div class="column">
+            <div class="ui special cards">
+              <div class="card">
+                <div class="blurring dimmable image">
+                  <div class="ui dimmer">
+                    <div class="content">
+                      <div class="center">
+                        <p><a href="<?php echo $this->url('shop_info',array('id' => $rent->getCustomer()->getShop()->getId())); ?>"><?php echo $rent->getCustomer()->getShop()->getShopName(); ?></a></p>
+                        <a href="<?php echo $rent->getCustomer()->getShop()->getUrlFacebook(); ?>" target="_blank"><i class="icon facebook"></i></a>
+                      </div>
+                    </div>
+                  </div>
+                  <img src="<?php echo $rent->getCategory()->getImage(); ?>" class="img-game">
+                </div>
+                <div class="content">
+                  <select class="ui dropdown fluid">
+                    <?php $rent_time = unserialize($rent->getRentTime()); ?>
+                    <option value="3" <?php echo (array_key_exists(3,$rent_time)) ? '' : 'disabled' ?>><?php echo (array_key_exists(3,$rent_time)) ? number_format($rent_time[3]).'đ/3h' : '0đ/3h' ?></option>
+                    <option value="8" <?php echo (array_key_exists(8,$rent_time)) ? '' : 'disabled' ?>><?php echo (array_key_exists(8,$rent_time)) ? number_format($rent_time[8]).'đ/8h' : '0đ/8h' ?></option>
+                    <option value="20" <?php echo (array_key_exists(20,$rent_time)) ? '' : 'disabled' ?>><?php echo (array_key_exists(20,$rent_time)) ? number_format($rent_time[20]).'đ/20h' : '0đ/20h' ?></option>
+                    <option value="36" <?php echo (array_key_exists(36,$rent_time)) ? '' : 'disabled' ?>><?php echo (array_key_exists(36,$rent_time)) ? number_format($rent_time[36]).'đ/36h' : '0đ/36h' ?></option>
+                    <option value="72" <?php echo (array_key_exists(72,$rent_time)) ? '' : 'disabled' ?>><?php echo (array_key_exists(72,$rent_time)) ? number_format($rent_time[72]).'đ/72h' : '0đ/72h' ?></option>
+                    
+                  </select>
+                  <input style="display: none;" class="money_3" value="<?php echo (array_key_exists(3,$rent_time)) ? $rent_time[3] : 0 ?>">
+                    <input style="display: none;" class="money_8" value="<?php echo (array_key_exists(8,$rent_time)) ? $rent_time[8] : 0 ?>">
+                    <input style="display: none;" class="money_20" value="<?php echo (array_key_exists(20,$rent_time)) ? $rent_time[20] : 0 ?>">
+                    <input style="display: none;" class="money_36" value="<?php echo (array_key_exists(36,$rent_time)) ? $rent_time[36] : 0 ?>">
+                    <input style="display: none;" class="money_72" value="<?php echo (array_key_exists(72,$rent_time)) ? $rent_time[72] : 0 ?>">
+                </div>
+                <div class="extra content">
+                  <div class="ui buttons fluid">
+                    <button class="ui button black btn-rent" data-id="<?php echo $rent->getId(); ?>">Thuê Ngay</button>
+                    <div class="or" data-text="&"></div>
+                    <button class="ui button" data-tooltip="<?php echo $rent->getDescription(); ?>"><i class="info icon"></i></button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        <?php endforeach; ?>
+      </div>
+      </div>
+      <section class="more">
+        <button class="ui button black fluid btn-more">XEM THÊM</button>
+      </section>
+    </article>

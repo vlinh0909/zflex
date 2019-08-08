@@ -1,0 +1,76 @@
+<?php echo $this->headTitle("Thêm Game") ?>
+<?php
+    $form = $this->form;
+    $form->prepare();
+    $form->setAttribute('action',$this->Path()->CategoryAdd());
+    echo $this->form()->openTag($form);
+    echo $this->formElement($form->get('csrf'));
+?>
+<div class="box bg-white mt-3">
+    <div class="box-heading">
+        <p class="lead">Thêm luật</p>
+        <div class="btn-add">
+            <button class="btn btn-info">Lưu <i class="fa fa-floppy-o" aria-hidden="true"></i></button>
+        </div>
+    </div>
+    <div class="box-body box-body-form">
+        <div class="box-form">
+            <div class="box-form-heading">
+                <small class="box-form-title">Thông tin</small>
+                <p class="box-close">
+                    <i class="fa fa-angle-down" aria-hidden="true"></i>
+                </p>
+            </div>
+            <div class="box-form-content">
+                <div class="row">
+                    <div class="col-4">
+                        <?php echo $this->formLabel($form->get('name')); ?>
+                    </div>
+                    <div class="col-8">
+                        <?php echo $this->formElement($form->get('name')); ?>
+                        <?php echo $this->formElementErrors($form->get('name')); ?>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="box-form mt-3">
+            <div class="box-form-heading">
+                <small class="box-form-title">Cấu hình</small>
+                <p class="box-close">
+                    <i class="fa fa-angle-down" aria-hidden="true"></i>
+                </p>
+            </div>
+            <div class="box-form-content">
+                <div class="row">
+                    <div class="col-4">
+                        <?php echo $this->formLabel($form->get('code')); ?>
+                    </div>
+                    <div class="col-8">
+                        <?php echo $this->formElement($form->get('code')); ?>
+                        <?php echo $this->formElementErrors($form->get('code')); ?>
+                    </div>
+                    <div class="col-4">
+                        <?php echo $this->formLabel($form->get('order_by')); ?>
+                    </div>
+                    <div class="col-8">
+                        <?php echo $this->formElement($form->get('order_by')); ?>
+                        <?php echo $this->formElementErrors($form->get('order_by')); ?>
+                    </div>
+                    <div class="col-4">
+                        <?php echo $this->formLabel($form->get('image')); ?>
+                    </div>
+                    <div class="col-8">
+                        <?php
+                            echo $this->Layout()->SetMedia($form->get('image'),0);
+                            echo $this->formElementErrors($form->get('image'));
+                        ?>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<?php 
+    $this->form()->closeTag();
+?>
+<?php echo $this->Layout()->MediaModal(); ?>

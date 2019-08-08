@@ -1,0 +1,310 @@
+<?php echo $this->headTitle("Chỉnh Sửa Khách Hàng") ?>
+<?php 
+    $customer = $this->customer;
+    $form = $this->form;
+    $form->prepare();
+    $form->setAttribute('action',$this->url('zflex/customer',array('action' => 'edit','id' => $this->customer->getId())));
+    echo $this->form()->openTag($form);
+    echo $this->formElement($form->get('csrf'));
+?>
+<div class="box bg-white mt-3">
+    <div class="box-heading">
+        <p class="lead">Thêm khách hàng</p>
+        <div class="btn-add">
+            <?php if($customer->getIsBlock() == 1): ?>
+                        <a href="<?php echo $this->url('zflex/customer',array('action' => 'unlock','id' => $customer->getId())); ?>" class="btn btn-info">Mở Khóa</a>
+                        <?php else: ?>
+                        <button type="button" class="btn btn-info btn-lock" data-id="<?php echo $customer->getId(); ?>">Khóa</button>
+                        <?php endif; ?>
+            <button class= "btn btn-info">Lưu <i class="fa fa-floppy-o" aria-hidden="true"></i></button>
+        </div>
+    </div>
+    <div class="box-body box-body-form">
+        <div class="box-form">
+            <div class="box-form-heading">
+                <small class="box-form-title">Thông tin khách hàng</small>
+                <p class="box-close">
+                    <i class="fa fa-angle-down" aria-hidden="true"></i>
+                </p>
+            </div>
+            <div class="box-form-content">
+                <div class="row">
+                    <div class="col-4">
+                        <label class="box-left-title">Tên Facebook</label>
+                    </div>
+                    <div class="col-8">
+                        <input type="text" class="form-control" disabled value="<?php echo $this->customer->getFbName();?>">
+                    </div>
+                    <div class="col-4">
+                        <label class="box-left-title">Tên Shop</label>
+                    </div>
+                    <div class="col-8">
+                        <?php if($this->customer->getOpenShop() != 0): ?>
+                        <input type="text" class="form-control" disabled value="<?php echo $this->customer->getShop()->getShopName();?>">
+                        <a href="<?php echo $this->url('shop_info',array('id' => $this->customer->getShop()->getId()));?>" class="box-form-muted mt-1" target="_blank"><?php echo $this->customer->getShop()->getShopName();?></a>
+                        <?php else:  ?>  
+                        <p class="m-0"><small>Tài khoản này chưa có shop</small></p>
+                        <?php endif; ?>  
+                    </div>
+                    <div class="col-4">
+                        <label class="box-left-title">Tiền Sở Hữu</label>
+                    </div>
+                    <div class="col-8">
+                        <input type="text" class="form-control" name="money" value="<?php echo $this->customer->getMoney();?>">
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="box-form mt-3">
+            <div class="box-form-heading">
+                <small class="box-form-title">Danh sách tố cáo</small>
+                <p class="box-close inverseIcon">
+                    <i class="fa fa-angle-down" aria-hidden="true"></i>
+                </p>
+            </div>
+            <div class="box-form-content" style="display: none;">
+                <?php if($this->customer->getOpenShop() != 0): ?>
+               <table class="table table-responsive table-bordered mt-3">
+                        <thead>
+                            <tr>
+                                <th>Thời gian</th>
+                                <th>Tố cáo shop</th>
+                                <th>Người tố cáo</th>
+                                <th width="40%">Nội dung</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                          <?php if($this->Data()->ReportShop($this->customer->getShop()->getId())): ?>
+                          <?php foreach($this->Data()->ReportShop($this->customer->getShop()->getId()) as $k => $v): ?>
+                          <tr>
+                            <td><?php echo \Carbon\Carbon::parse($v->getTimeCreated())->format('H:i:s d/m/Y'); ?></td>
+                            <td><a href="<?php echo $this->url('shop_info',array('id'=>$v->getShop()->getId())); ?>" target="_blank"><?php echo $v->getShop()->getShopName(); ?></a> - <a href="<?php echo $this->url('zflex/customer',array('action' => 'edit','id'=> $v->getShop()->getCustomer()->getId())); ?>" target="_blank"><?php echo $v->getShop()->getCustomer()->getFbName(); ?></td>
+                            <td><a href="<?php echo $this->url('zflex/customer',array('action' => 'edit','id'=> $v->getCustomer()->getId())); ?>" target="_blank"><?php echo $v->getCustomer()->getFbName(); ?></a></td>
+                            <td><?php echo $v->getMessage(); ?></td>
+                            <?php if($v->getIsRead() == 0): ?>
+                            <td class="text-center" data-toggle="tooltip" data-placement="top" title="Xử lý ngay!"><i data-id="<?php echo $v->getId(); ?>" class="icon-radio-unchecked d-block read-report" style="cursor: pointer;"></i></td>
+                            <?php else: ?>
+                            <td class="text-center" data-toggle="tooltip" data-placement="top" title="Đã được xử lý"><i class="icon-checkmark3 d-block"></i></td>
+                          <?php endif; ?>
+                          </tr>
+                          <?php endforeach; ?>
+                          <?php else: ?>
+                          <tr>
+                            <td colspan="5" class="text-center">Không có tố cáo shop nào !</td>
+                          </tr>
+                          <?php endif; ?>
+                        </tbody>
+                    </table>  
+                <?php else:  ?>  
+                <p class="m-0"><small>Tài khoản này chưa có shop</small></p>
+                <?php endif; ?>  
+            </div>
+        </div>
+        <div class="box-form mt-3">
+            <div class="box-form-heading">
+                <small class="box-form-title">Báo lỗi từ khách hàng</small>
+                <p class="box-close inverseIcon">
+                    <i class="fa fa-angle-down" aria-hidden="true"></i>
+                </p>
+            </div>
+            <div class="box-form-content" style="display: none;">
+                <?php if($this->customer->getOpenShop() != 0): ?>
+               <table class="table table-responsive table-bordered mt-3">
+                        <thead>
+                            <tr>
+                                <th>Thời gian báo lỗi</th>
+                                <th>Tài khoản</th>
+                                <th>Game</th>
+                                <th width="40%">Nội dung</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                          <?php if($this->FrontendData()->ReportRent($this->customer->getShop())): ?>
+                          <?php
+                                    foreach($this->FrontendData()->ReportRent($this->customer->getShop()) as $v){ ?>
+                          <tr>
+                                <td><?php echo \Carbon\Carbon::parse($v->getTimeCreated())->format('h:i:s A \N\g\à\y d/m/Y') ?></td>
+                                <td><?php echo $v->getRent()->getUsername() ?></td>
+                                <td><?php echo $v->getRent()->getCategory()->getName() ?></td>
+                                <td><?php echo $v->getMsg(); ?></td>
+                                    <?php if($v->getIsShow() == 0): ?>
+                                        <td class="text-center" data-toggle="tooltip" data-placement="top" title="đã xử lý"><i class="icon-checkmark3 d-block" style="cursor: pointer;"></i></td>
+                                    <?php else: ?>
+                                        <td class="text-center" data-toggle="tooltip" data-placement="top" title="chưa xử lý"><i class="icon-radio-unchecked d-block" style="cursor: pointer;"></i></td>
+                                    <?php endif; ?>
+                            </tr>
+                                          <?php }; ?>
+                          
+                          <?php else: ?>
+                            <tr>
+                            <td colspan="5" class="text-center">Không có báo lỗi nào !</td>
+                          </tr>
+                          <?php endif; ?>
+                        </tbody>
+                    </table>  
+                <?php else:  ?>  
+                <p class="m-0"><small>Tài khoản này chưa có shop</small></p>
+                <?php endif; ?>  
+            </div>
+        </div>
+        <div class="box-form mt-3">
+            <div class="box-form-heading">
+                <small class="box-form-title">Lịch sử giao dịch</small>
+                <p class="box-close inverseIcon">
+                    <i class="fa fa-angle-down" aria-hidden="true"></i>
+                </p>
+            </div>
+            <div class="box-form-content" style="display: none;">
+                <?php if($this->customer->getOpenShop() != 0): ?>
+                <table class="table table-responsive table-bordered mt-3">
+                        <thead>
+                            <tr>
+                                <th>Thời gian</th>
+                                <th>Số tiền</th>
+                                <th width="65%">Nội dung</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php if(!empty($customer->getHistoryRentBoss())): ?>
+                            <?php foreach($customer->getHistoryRentBoss() as $history_rent): ?>
+                            <tr>
+                              <td><?php echo \Carbon\Carbon::parse($history_rent->getTimeRent())->format('d-m-Y h:i:s A'); ?></td>
+                              <td>+<?php echo number_format($history_rent->getPrice()); ?> VNĐ</td>
+                              <td><p>Nhận tiền từ acc : <?php echo $history_rent->getRent()->getUsername(); ?> </p><p> Người thuê : <?php echo $history_rent->getCustomer()->getFbName(); ?> </p><p> Số lần gia hạn : <?php echo $history_rent->getGiaHanTimes(); ?></p>
+                              </td>
+                            </tr>
+                            <?php endforeach; ?>
+                            <?php else: ?>
+                            <tr>
+                                <td colspan="3" class="text-center">Không có lịch sử giao dịch nào !</td>
+                            </tr>
+                            <?php endif; ?>
+                        </tbody>
+                    </table>    
+                    <?php else:  ?>  
+                <p class="m-0"><small>Tài khoản này chưa có shop</small></p>
+                <?php endif; ?>  
+            </div>
+        </div>
+        <div class="box-form mt-3">
+            <div class="box-form-heading">
+                <small class="box-form-title">Danh sách tài khoản</small>
+                <p class="box-close inverseIcon">
+                    <i class="fa fa-angle-down" aria-hidden="true"></i>
+                </p>
+            </div>
+            <div class="box-form-content" style="display: none;">
+                <?php if($this->customer->getOpenShop() != 0): ?>
+                <table class="table table-responsive table-bordered mt-3">
+                <thead>
+                    <tr>
+                        <th>Tên tài khoản</th>
+                        <th>Mật khẩu</th>
+                        <th>Game</th>
+                        <th width="150">Tình trạng</th>
+                        <th width="150">Hết hạn lúc</th>
+                        <th width="150">Xóa</th>
+                    </tr>
+                </thead>
+                <tbody>
+                <?php 
+                $stt = 1;
+                foreach($this->customer->getRent() as $rent):
+                ?>
+                <tr>
+                    <td><?php echo $rent->getUsername(); ?></td>
+                    <td><?php echo $rent->getPassword(); ?></td>
+                    <td><?php echo $rent->getCategory()->getName(); ?></td>
+                    <td><?php if($rent->getStatus() == 1): ?>
+            <span style="color:#00b5ad;">Sẵn sàng</span>
+          <?php elseif($rent->getStatus() == 2): ?>
+            <?php 
+                $time_end = \Carbon\Carbon::parse($rent->getHistoryRent()->last()->getTimeEnd());
+                $gt = $time_end->gt(\Carbon\Carbon::now());
+                if($gt == true):
+            ?>
+            <span style="color:#fbbd08;">Đang được thuê</span>
+            <?php else: ?>
+            <span style="color:#db2828;">Chờ đổi pass</span>
+            <?php
+                endif;
+            ?>
+            
+          <?php elseif($rent->getStatus() == 3): ?>
+            <span style="color:#db2828;">Ngưng hoạt động</span>
+          <?php endif; ?></td>
+          <td><?php if($rent->getStatus() == 2): ?><span class="time_format"><?php echo $time_end->format('H:i:s d/m/Y'); ?></span><?php endif; ?></td>
+          <td><?php echo $this->Layout()->Button()->Delete($this->Path()->RentDelete($rent->getId()),'ajax') ?></td>
+                </tr>
+                <?php 
+                $stt++;
+                endforeach; ?> 
+                </tbody>
+            </table> 
+                    <?php else:  ?>  
+                <p class="m-0"><small>Tài khoản này chưa có shop</small></p>
+                <?php endif; ?>  
+            </div>
+        </div>
+        <div class="box-form mt-3">
+            <div class="box-form-heading">
+                <small class="box-form-title">Yêu cầu rút tiền</small>
+                <p class="box-close">
+                    <i class="fa fa-angle-down" aria-hidden="true"></i>
+                </p>
+            </div> 
+            <div class="box-form-content">
+                <?php if($this->customer->getOpenShop() != 0): ?>
+                <table class="table table-responsive table-bordered m-0 mt-3">
+                        <thead>
+                            <tr>
+                                <th>Thời gian</th>
+                                <th>Người yêu cầu</th>
+                                <th>Số tiền</th>
+                                <th>Ghi chú</th>
+                                <th width="35%">Thông tin</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                          <?php if($this->Data()->RequestWithdraw($this->customer->getId())): ?>
+                          <?php foreach($this->Data()->RequestWithdraw($this->customer->getId()) as $k => $v): ?>
+                          <tr>
+                            <td><?php echo \Carbon\Carbon::parse($v->getTimeCreated())->format('H:i:s d/m/Y'); ?></td>
+                            <td><a href="<?php echo $this->url('zflex/customer',array('action' => 'edit','id'=> $v->getCustomer()->getId())); ?>" target="_blank"><?php echo $v->getCustomer()->getFbName(); ?></a></td>
+                            <td><?php echo number_format($v->getMoney()); ?></td>
+                            <td><?php echo $v->getNote(); ?></td>
+                            <td>
+                              <div class="readmore">
+                                <?php $bank = array('vietcombank' => 'Vietcombank','bidv' => 'BIDV');?>
+                                <p>Ngân hàng : <?php echo $bank[$v->getCustomer()->getShop()->getBank()] ?></p>
+                                <p>Số tài khoản : <?php echo $v->getCustomer()->getShop()->getStkBank(); ?></p>
+                                <p>Chủ tài khoản : <?php echo $v->getCustomer()->getShop()->getCtkBank(); ?></p>
+                                <p>Số điện thoại : <?php echo $v->getCustomer()->getShop()->getPhoneNumber(); ?></p>
+                              </div>
+                            </td>
+                            <?php if($v->getIsSend() == 0): ?>
+                            <td class="text-center" data-toggle="tooltip" data-placement="top" title="chuyển tiền ngay !"><i data-id="<?php echo $v->getId(); ?>" class="icon-radio-unchecked d-block withdraw" style="cursor: pointer;"></i></td>
+                            <?php else: ?>
+                            
+                            <td class="text-center" data-toggle="tooltip" data-placement="top" title="đã được chuyển tiền"><i class="icon-checkmark3 d-block"></i></td>
+                          <?php endif; ?>
+                          </tr>
+                          <?php endforeach; ?>
+                          <?php else: ?>
+                          <tr>
+                            <td colspan="5" class="text-center">Không có yêu cầu rút tiền nào nào !</td>
+                          </tr>
+                          <?php endif; ?>
+                        </tbody>
+                    </table>    
+                    <?php else:  ?>  
+                <p class="m-0"><small>Tài khoản này chưa có shop</small></p>
+                <?php endif; ?>  
+            </div>
+        </div>
+    </div>
+</div>
+<?php $this->form()->closeTag(); ?>

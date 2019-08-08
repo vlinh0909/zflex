@@ -1,0 +1,147 @@
+<?php echo $this->headTitle("Danh Sách Sản Phẩm") ?>
+<?php 
+$url_ajax_rent_list = $this->url('ajax',array('action' => 'load-rent-list'));
+$url_ajax_rent_list_search = $this->url('ajax',array('action' => 'load-rent-list-search'));
+ $this->inlineScript()->captureStart();
+ 
+echo <<<JS
+    $(".filter-rent-list .btn-filter-2").click(function(){
+	  $(".filter-rent-list .btn-filter-2").removeClass("active");
+	  $(this).addClass("active");
+	  status_search = $(this).data('status');
+	  $.ajax({
+	    type: 'POST',
+	    url: "$url_ajax_rent_list",
+	    beforeSend: function() {
+	        $(".table-rent-list").addClass("active");
+	    },
+	    data: { status: status_search},
+	    success: function(data)
+	    {
+	      var result = data.result;
+	      console.log(result);
+	      $(".tbody-rent-list > tr").remove();
+	      $.each(result, function(i, value) {
+	        $(".tbody-rent-list").append(htmlRentList(value));
+	      });
+	    },
+	    complete: function() {
+	      $(".table-rent-list").removeClass("active");
+	    },
+	    dataType: 'json'
+	  });
+	});
+	$(".search-rent").keypress(function (e) {
+	 var key = e.which;
+	 var val = strip_tags($(this).val());
+	 if(key == 13)  // the enter key code
+	  {
+	    $.ajax({
+	      type: 'POST',
+	      url: "$url_ajax_rent_list_search",
+	      beforeSend: function() {
+	          $(".table-rent-list").addClass("active");
+	      },
+	      data: { search: val,status_search:status_search},
+	      success: function(data)
+	      {
+	        var result = data.result;
+	        $(".tbody-rent-list > tr").remove();
+	        $.each(result, function(i, value) {
+	          $(".tbody-rent-list").append(htmlRentList(value));
+	        });
+	      },
+	      complete: function() {
+	        $(".table-rent-list").removeClass("active");
+	      },
+	      dataType: 'json'
+	    });
+	  }
+	});
+JS;
+$this->inlineScript()->captureEnd(); ?>
+<article class="ui container wrapper">    
+    <?php echo $this->partial('partial/nav_shop'); ?>
+    <div class="ui horizontal segments" style="border:1px solid #bfbfbf;box-shadow: unset;margin-bottom: 0px;clear: both;">
+	  <div class="ui segment">
+	    <h4 class="ui header">TỔNG SỐ ACC:<?php echo $this->count['total']; ?></h4>
+	  </div>
+	  <div class="ui segment">
+	    <h4 class="ui header">ĐANG THUÊ:<?php echo $this->count['dang_thue']; ?></h4>
+	  </div>
+	  <div class="ui segment">
+	    <h4 class="ui header">SẴN SÀNG:<?php echo $this->count['san_sang']; ?></h4>
+	  </div>
+	  <div class="ui segment">
+	    <h4 class="ui header">NGƯNG HOẠT ĐỘNG:<?php echo $this->count['ngung_hoat_dong']; ?></h4>
+	  </div>
+	</div>
+	<section class="filter filter-rent-list" style="display: block;">
+    <div class="">
+        <button class="btn-filter btn-filter-2 active" data-status="0">Tất cả</button>
+        <button class="btn-filter btn-filter-2" data-status="1">Sẵn sàng</button>
+        <button class="btn-filter btn-filter-2" data-status="2">Đang thuê</button>
+        <button class="btn-filter btn-filter-2" data-status="3">Ngưng hoạt hoạt</button>
+        <div class="ui icon input">
+		  <input type="text" class="search-rent" placeholder="Tên đăng nhập" style="padding: 8px 12px;border-radius: 0px;font-size: 13px;">
+		  <i class="search icon"></i>
+		</div>
+    </div>
+  </section>
+  <div class="dimmable">
+    <div class="ui inverted dimmer table-rent-list">
+        <div class="ui loader"></div>
+    </div>
+    <table class="ui basic celled table" style="border-radius: 0px;">
+	  <thead>
+	    <tr>
+	      <th>Tên đăng nhập</th>
+	      <th>Lượt thuê</th>
+	      <th>Doanh thu</th>
+	      <th>Game</th>
+	      <th>Khách đang thuê</th>
+	      <th>Tình trạng</th>
+	      <th></th>
+	    </tr>
+	  </thead>
+	  <tbody class="tbody-rent-list">
+	  	<?php if(count($this->rents)): ?>
+	  	<?php foreach($this->rents as $rent): ?>
+	    <tr>
+	      <td><?php echo $rent->getUsername(); ?></td>
+	      <td><?php echo $rent->getRentTimes(); ?></td>
+	      <td><?php echo number_format($rent->getSumMoney()); ?> VNĐ</td>
+	      <td><?php echo $rent->getCategory()->getName(); ?></td>
+	      <td><?php echo ($rent->getStatus() == 2) ? $rent->getHistoryRent()->last()->getCustomer()->getFbName() : ''; ?></td>
+	      <td>
+	      <?php if($rent->getStatus() == 1): ?>
+			<span style="color:#00b5ad;">Sẵn sàng</span>
+		  <?php elseif($rent->getStatus() == 2): ?>
+		  	<?php 
+		  		$time_end = \Carbon\Carbon::parse($rent->getHistoryRent()->last()->getTimeEnd());
+		  		$gt = $time_end->gt(\Carbon\Carbon::now());
+		  		if($gt == true):
+		  	?>
+		  	<span style="color:#fbbd08;">Đang được thuê</span>
+		  	<?php else: ?>
+		  	<span style="color:#db2828;">Chờ đổi pass</span>
+		  	<?php
+		  		endif;
+		  	?>
+		  	
+		  <?php elseif($rent->getStatus() == 3): ?>
+		  	<span style="color:#db2828;">Ngưng hoạt động</span>
+	      <?php endif; ?>
+	      </td>
+	      <td class="ui center aligned"><a href="<?php echo $this->url('shop/defaults',array('action' => 'shop-edit','id' => $rent->getId())); ?>" style="color:black;"><i class="signup icon m-0"></i></a></td>
+	    </tr>
+	    <?php endforeach; ?>
+		<?php else: ?>
+		<tr>
+			<td colspan="7" class="ui center aligned">Chưa có tài khoản nào</td>
+		</tr>
+		<?php endif; ?>
+	  </tbody>
+	</table>
+	</div>
+</article>

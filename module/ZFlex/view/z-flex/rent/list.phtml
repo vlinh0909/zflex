@@ -1,0 +1,80 @@
+<?php echo $this->headTitle("Danh Sách Sản Phẩm") ?>
+<div class="box bg-white mt-3">
+    <div class="box-heading">
+        <p class="lead">Danh sách sản phẩm thuê</p>
+    </div>
+        <div class="box-body">
+            <?php 
+                echo $this->Layout()->FlashMessenger();
+            ?>
+    
+            <table class="table table-responsive table-bordered" data-toggle="table" data-search="true">
+                <thead>
+                    <tr>
+                        <th>Tên tài khoản</th>
+                        <th>Mật khẩu</th>
+                        <th>Game</th>
+                        <th>Shop / Chủ Shop</th>
+                        <th width="150">Tình trạng</th>
+                        <th width="150">Hết hạn lúc</th>
+                        <th width="150">Xóa</th>
+                    </tr>
+                </thead>
+                <tbody>
+                <?php 
+                $stt = 1;
+                foreach($this->paging as $rent):
+                ?>
+                <tr>
+                    <td><?php echo $rent->getUsername(); ?></td>
+                    <td><?php echo $rent->getPassword(); ?></td>
+                    <td><?php echo $rent->getCategory()->getName(); ?></td>
+                    <td><a href="<?php echo $this->url('shop_info',array('id'=>$rent->getCustomer()->getShop()->getId())); ?>" target="_blank"><?php echo $rent->getCustomer()->getShop()->getShopName(); ?></a> - <a href="<?php echo $this->url('zflex/customer',array('action' => 'edit','id'=> $rent->getCustomer()->getShop()->getCustomer()->getId())); ?>" target="_blank"><?php echo $rent->getCustomer()->getShop()->getCustomer()->getFbName(); ?></td>
+                    
+
+                    <td><?php if($rent->getStatus() == 1): ?>
+            <span style="color:#00b5ad;">Sẵn sàng</span>
+          <?php elseif($rent->getStatus() == 2): ?>
+            <?php 
+                $time_end = \Carbon\Carbon::parse($rent->getHistoryRent()->last()->getTimeEnd());
+                $gt = $time_end->gt(\Carbon\Carbon::now());
+                if($gt == true):
+            ?>
+            <span style="color:#fbbd08;">Đang được thuê</span>
+            <?php else: ?>
+            <span style="color:#db2828;">Chờ đổi pass</span>
+            <?php
+                endif;
+            ?>
+            
+          <?php elseif($rent->getStatus() == 3): ?>
+            <span style="color:#db2828;">Ngưng hoạt động</span>
+          <?php endif; ?></td>
+          <td><?php if($rent->getStatus() == 2): ?><span class="time_format"><?php echo $time_end->format('H:i:s d/m/Y'); ?></span><?php endif; ?></td>
+          <td><?php echo $this->Layout()->Button()->Delete($this->Path()->RentDelete($rent->getId()),'ajax') ?></td>
+                </tr>
+                <?php 
+                $stt++;
+                endforeach; ?> 
+                </tbody>
+            </table>
+            <div class="box-pagination mt-3">
+                <?php
+                    echo $this->paginationControl(
+                        $this->paging,
+                        'sliding',
+                        array(
+                            'partial/pagination.phtml',
+                            'zflex'
+                        ),
+                        array(
+                            'route' => 'zflex/rent',
+                            'params' => array(
+                                'action' => 'list'
+                            )
+                        )
+                    );
+                 ?>
+            </div>   
+        </div>
+</div>

@@ -1,0 +1,58 @@
+<?php echo $this->headTitle("Tạo Shop"); ?>
+<article class="ui container wrapper">
+  <section class="filter">
+  </section>
+  <div class="ui icon message">
+    <i class="hand rock icon"></i>
+    <div class="content">
+      <div class="header">
+        QUY ĐỊNH TẠO SHOP !
+      </div>
+    </div>
+  </div>
+  <div class="ui header">
+      <p>Bạn đang có Acc Game muốn cho người khác thuê. Tạo shop ngay:</p>
+      <p>Qui định tạo shop:</p>
+      <ul>
+          <li>Phí tạo shop: 20.000đ</li>
+          <li>Tất cả tài khoản đăng lên shop thông tin phải chính xác và tắt các xác thực để người dùng dễ dàng truy cập.</li>
+          <li>Bạn sẽ được ThueAcc hướng dẫn các vấn đề về bảo mật tài khoản.</li>
+          <li>Chiết khấu cho ThueAcc: 25%. Bạn sẽ nhận được 75% tổng số tiền thu được.</li>
+          <li>Bạn có thể rút tiền thẳng về tài khoản ngân hàng của mình.</li>
+          <li>Thuê Acc là nền tảng chia sẻ acc game. Mọi vấn đề xảy ra trong quá trình thuê. Thuê Acc sẽ không chịu trách nhiệm. Các bạn vui lòng cân nhắc và bảo mật kỹ tài khoản của mình.</li>
+          <li>Bạn không được thay đổi thông tin tài khoản trong khi khách hàng đang thuê và sử dụng.</li>
+          <li>Đối với những game đặc thù, bạn phải ghi đầy đủ mô tả về acc. Bạn sẽ bị phạt nếu thông tin đăng lên không chính xác.</li>
+      </ul>
+      <p>Khi khách hàng thuê nhưng không đăng nhập được. Nhân viên sẽ kiểm tra, nếu thông tin tài khoản không chính xác, bạn sẽ bị phạt. Nếu bạn sai quá nhiều lần, tài khoản của bạn sẽ bị tạm khóa</p>
+      <p>Hãy chọn ngay cho shop của bạn 1 cái tên hay để kinh doanh ngay:</p> 
+  </div>
+
+    <?php 
+    $form = $this->form;
+    $form->prepare();
+    $form->setAttribute('action',$this->url('create_shop'));
+    echo $this->form()->openTag($form);
+    echo $this->formElement($form->get('csrf'));
+    ?>
+      <div class="ui input">
+        <input type="text" placeholder="Tên Shop" required="required" name="name_shop">
+      </div>
+      <?php if($this->customer->getMoney() < 20000): ?>
+      <button type="button" class="ui secondary button" onclick="alert('Bạn phải có 20.000đ mới có thể tạo shop !')">
+        TẠO SHOP
+      </button>
+      <?php else: ?>
+      <button type="submit" class="ui secondary button">
+        TẠO SHOP
+      </button> 
+      <?php endif; ?>
+      <?php if($this->error): ?>
+      <div class="ui form mt-15">
+        <div class="ui message">
+          <div class="header">Lỗi !</div>
+            <li><?php echo $this->error; ?></li>
+        </div>
+      </div>
+      <?php endif; ?>
+    <?php $this->form()->closeTag(); ?>
+</article>

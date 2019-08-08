@@ -1,0 +1,121 @@
+<?php echo $this->headTitle("Chirh Sửa Sản Phẩm ".$this->rent->getUsername()) ?>
+<article class="ui container wrapper">    
+    <?php echo $this->partial('partial/nav_shop'); ?>
+    <?php echo $this->partial('partial/errors'); ?>
+    <?php 
+    $form = $this->form;
+    $form->prepare();
+    $form->setAttribute('action',$this->url('shop/defaults',array('action' => 'shop-edit','id' => $this->rent->getId())));
+    $form->setAttribute('class','ui form');
+    $form->setAttribute('id','form_add');
+    echo $this->form()->openTag($form);
+    echo $this->formElement($form->get('csrf'));
+    ?>
+    <input type="hidden" name="password_hidden" value="<?php echo $this->pass_random; ?>">
+      <div class="field">
+        <label>Tên đăng nhập</label>
+        <input type="text" name="username" value="<?php echo $this->rent->getUsername(); ?>">
+      </div>
+      <div class="field">
+        <label>Mật khẩu</label>
+        <div class="ui action disabled input">
+
+		  <input type="text" disabled="disabled" value="<?php echo $this->rent->getPassword(); ?>">
+		  
+		</div>
+
+      </div>
+      <div class="field">
+        <label>Game</label>
+        <select class="ui fluid dropdown" name="game">
+        	<?php foreach($this->FrontendData()->Category() as $key => $category): ?>
+        	<?php if($this->rent->getCategory()->getCode() == $key): ?>
+	        <option value="<?php echo $key; ?>" selected="selected"><?php echo $category; ?></option>
+	    	<?php else: ?>
+	    	<option value="<?php echo $key; ?>"><?php echo $category; ?></option>	
+	    	<?php endif; ?>
+	    	<?php endforeach; ?>
+	    </select>
+      </div>
+      <div class="field">
+        <label>Mô tả</label>
+        <textarea name="description" style="border-radius: 0px;"><?php echo $this->rent->getDescription(); ?></textarea>
+      </div>
+      <?php $rent_time = unserialize($this->rent->getRentTime()); ?>
+      <div class="ui segment d-table" style="border-radius: 0px;">
+      	<button type="button" class="ui button mini mb-15" id="dexuatgia">ĐỀ XUẤT GIÁ</button>
+	    <div class="field d-table-row">
+	      	<div class="ui toggle checkbox table-cell">
+		        <input type="checkbox" name="hours[3]" <?php echo (!empty($rent_time['3'])) ? 'checked' : '' ?> class="hidden">
+		        <label>3 giờ</label>
+	     	</div>
+	     	<?php if(!empty($rent_time['3'])): ?>
+			<input type="text" name="money[3]" id="hours_3" class="input-rent table-cell" value="<?php echo $rent_time['3']; ?>">
+			<?php else: ?>
+			<input type="text" name="money[3]" id="hours_3" class="input-rent table-cell">
+			<?php endif; ?>
+	    </div>
+	    <div class="field d-table-row">
+	      	<div class="ui toggle checkbox table-cell">
+		        <input type="checkbox" name="hours[8]" <?php echo (!empty($rent_time['8'])) ? 'checked' : '' ?> class="hidden">
+		        <label>8 giờ</label>
+	     	</div>
+	     	<?php if(!empty($rent_time['8'])): ?>
+			<input type="text" name="money[8]" id="hours_8" class="input-rent table-cell" value="<?php echo $rent_time['8']; ?>">
+			<?php else: ?>
+			<input type="text" name="money[8]" id="hours_8" class="input-rent table-cell">
+			<?php endif; ?>
+	    </div>
+	    <div class="field d-table-row">
+	      	<div class="ui toggle checkbox table-cell">
+		        <input type="checkbox" name="hours[20]" <?php echo (!empty($rent_time['20'])) ? 'checked' : '' ?> class="hidden">
+		        <label>20 giờ</label>
+	     	</div>
+	     	<?php if(!empty($rent_time['20'])): ?>
+			<input type="text" name="money[20]" id="hours_20" class="input-rent table-cell" value="<?php echo $rent_time['20']; ?>">
+			<?php else: ?>
+			<input type="text" name="money[20]" id="hours_20" class="input-rent table-cell">
+			<?php endif; ?>
+	    </div>
+	    <div class="field d-table-row">
+	      	<div class="ui toggle checkbox table-cell">
+		        <input type="checkbox" name="hours[36]" <?php echo (!empty($rent_time['36'])) ? 'checked' : '' ?> class="hidden">
+		        <label>36 giờ</label>
+	     	</div>
+	     	<?php if(!empty($rent_time['36'])): ?>
+			<input type="text" name="money[36]" id="hours_36" class="input-rent table-cell" value="<?php echo $rent_time['36']; ?>">
+			<?php else: ?>
+			<input type="text" name="money[36]" id="hours_36" class="input-rent table-cell">
+			<?php endif; ?>
+	    </div>
+	    <div class="field d-table-row">
+	      	<div class="ui toggle checkbox table-cell">
+		        <input type="checkbox" name="hours[72]" <?php echo (!empty($rent_time['72'])) ? 'checked' : '' ?> class="hidden">
+		        <label>72 giờ</label>
+	     	</div>
+	     	<?php if(!empty($rent_time['72'])): ?>
+			<input type="text" name="money[72]" id="hours_72" class="input-rent table-cell" value="<?php echo $rent_time['72']; ?>">
+			<?php else: ?>
+			<input type="text" name="money[72]" id="hours_72" class="input-rent table-cell">
+			<?php endif; ?>
+	    </div>
+	  </div>
+      <div class="field">
+	    <div class="ui checkbox">
+	      <input type="checkbox" name="is_giahan" <?php echo ($this->rent->getIsGiaHan() == 1) ? 'checked' : '' ?> class="hidden">
+	      <label>Cho phép gia hạn</label>
+	    </div>
+	  </div>
+	  <?php if($this->rent->getStatus() != 2): ?>
+	  <div class="field">
+	  	<div class="ui checkbox">
+	      <input type="checkbox" name="is_ngunghoatdong" <?php echo ($this->rent->getStatus() == 3) ? 'checked' : '' ?> class="hidden">
+	      <label>Ngưng hoạt động</label>
+	    </div>
+	  </div>
+	<?php endif; ?>
+      <button type="submit" class="ui secondary button fluid">
+        CẬP NHẬT SẢN PHẨM
+      </button>
+    <?php $this->form()->closeTag(); ?>
+</article>

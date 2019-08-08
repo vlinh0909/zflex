@@ -1,0 +1,62 @@
+<?php if ($this->pageCount): ?>
+     <nav aria-label="Page navigation example">
+         <ul class="pagination">
+             <!-- Previous page link -->
+             <?php if (isset($this->previous)): ?>
+                 <li class="page-item">
+                    <?php
+                        $param = $this->params;
+                        $param['page'] = $this->previous;
+                    ?>
+                     <a href="<?php echo $this->url($this->route,$param); ?>" class="page-link">
+                        <i class="fa fa-angle-double-left" aria-hidden="true"></i>
+                     </a>
+                 </li>
+             <?php else: ?>
+                 <li class="page-item disabled">
+                     <a href="#" class="page-link">
+                        <i class="fa fa-angle-double-left" aria-hidden="true"></i>
+                     </a>
+                 </li>
+             <?php endif; ?>
+
+             <!-- Numbered page links -->
+             <?php foreach ($this->pagesInRange as $page): ?>
+                 <?php if ($page != $this->current): ?>
+                     <li class="page-item">
+                        <?php
+                            $param = $this->params;
+                            $param['page'] = $page
+                        ?>
+                         <a href="<?php echo $this->url($this->route,$param);?>" class="page-link">
+                             <?php echo $page; ?>
+                         </a>
+                     </li>
+                 <?php else: ?>
+                     <li class="page-item active">
+                         <a href="#" class="page-link"><?php echo $page; ?></a>
+                     </li>
+                 <?php endif; ?>
+             <?php endforeach; ?>
+
+             <!-- Next page link -->
+             <?php if (isset($this->next)): ?>
+                 <li class="page-item">
+                    <?php
+                        $param = $this->params;
+                        $param['page'] = $this->next
+                    ?>
+                     <a href="<?php echo $this->url($this->route,$param); ?>" class="page-link">
+                        <i class="fa fa-angle-double-right" aria-hidden="true"></i>
+                     </a>
+                 </li>
+             <?php else: ?>
+                 <li class="page-item disabled">
+                     <a href="#" class="page-link">
+                        <i class="fa fa-angle-double-right" aria-hidden="true"></i>
+                     </a>
+                 </li>
+             <?php endif; ?>
+         </ul>
+     </nav>
+ <?php endif; ?>

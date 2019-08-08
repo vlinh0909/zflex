@@ -1,0 +1,87 @@
+<?php echo $this->headTitle('Danh Sách Ban Quản Trị') ?>
+<div class="box bg-white mt-3">
+    <div class="box-heading">
+        <p class="lead">Danh sách ban quản trị</p>
+        <p class="btn-add">
+            <a href="<?php echo $this->url('zflex/member',array('action' => 'add')); ?>" class="btn btn-info">Thêm <i class="icon-plus3"></i></a>
+        </p>
+    </div>
+    <form action="<?php echo $this->Path()->MemberMulti(); ?>" method="POST">
+        <div class="box-body">
+            <?php 
+                echo $this->Layout()->FlashMessenger();
+            ?>
+            <div class="box-action">
+                <?php echo $this->Layout()->Multi(); ?>
+            </div>
+            <table class="table table-responsive table-bordered" data-toggle="table" data-search="true">
+                <thead>
+                    <tr>
+                        <th width="50">
+                            <?php echo $this->Script()->CbxToggle('id[]'); ?>
+                            <div class="cntr">
+                              <input class="cbx-input" onClick="toggle(this)" id="source" type="checkbox" /><label class="cbx" for="source"></label><label class="lbl" for="source"></label>
+                            </div>
+                        </th>
+                        <th width="50">STT</th>
+                        <th width="100">Hình ảnh</th>
+                        <th>Tên tài khoản</th>
+                        <th width="200">Đăng ký lúc</th>
+                        <th width="200">Chức vụ</th>
+                        <th width="150">Tình trạng</th>
+                        <th width="100">Sửa</th>
+                        <th width="100">Xóa</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php
+                        $members = $this->paging;
+                    ?>
+                    <?php
+                    $stt = 1;
+                    foreach($members as $key => $member):
+                    ?>
+                        <tr>
+                            <td>
+                                <div class='cntr'>
+                                  <input class='cbx-input' name='id[]' id='<?php echo $member->getId() ?>' type='checkbox' value='<?php echo $member->getId() ?>' /><label class='cbx' for='<?php echo $member->getId() ?>'></label><label class='lbl' for='<?php echo $member->getId() ?>'></label>
+                                </div>
+                            </td>
+                            <td scope='row'><?php echo $stt; ?></td>
+                            <td>
+                            <img src='<?php echo $member->getImage() ?>' alt='' width='40px' height='40px'>
+                            </td>
+                            <td><?php echo $member->getUsername() ?></td>
+                            <td><?php echo $member->getTimeCreated() ?></td>
+                            <td><?php echo $member->getPermission()->getName() ?></td>
+                            <?php echo $this->Layout()->Status($member->getStatus(),1); ?>
+                            <td><?php echo $this->Layout()->Button()->Edit($this->Path()->MemberEdit($member->getId())); ?></td>
+                            <td><?php echo $this->Layout()->Button()->Delete($this->Path()->MemberDelete($member->getId()),'ajax') ?></td>
+                        </tr>
+                    <?php 
+                    $stt++;
+                    endforeach 
+                    ?>
+                </tbody>
+            </table>
+            <div class="box-pagination mt-3">
+                <?php
+                    echo $this->paginationControl(
+                        $this->paging,
+                        'sliding',
+                        array(
+                            'partial/pagination.phtml',
+                            'zflex'
+                        ),
+                        array(
+                            'route' => 'zflex/member',
+                            'params' => array(
+                                'action' => 'list'
+                            )
+                        )
+                    );
+                 ?>
+            </div>   
+        </div>
+    </form>
+</div>

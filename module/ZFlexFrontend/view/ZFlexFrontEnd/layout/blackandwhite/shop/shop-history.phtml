@@ -1,0 +1,23 @@
+<?php echo $this->headTitle("Lịch Sử Giao Dịch") ?>
+<article class="ui container wrapper">    
+    <?php echo $this->partial('partial/nav_shop'); ?>
+    <table class="ui basic celled table" style="border-radius: 0px;">
+	  <thead>
+	    <tr>
+	      <th>Thời gian</th>
+	      <th>Số tiền</th>
+	      <th width="65%">Nội dung</th>
+	    </tr>
+	  </thead>
+	  <tbody>
+	  	<?php foreach($this->history_rents as $history_rent): ?>
+	    <tr>
+	      <td><?php echo \Carbon\Carbon::parse($history_rent->getTimeRent())->format('d-m-Y h:i:s A'); ?></td>
+	      <td>+<?php echo number_format($history_rent->getPrice()); ?> VNĐ</td>
+	      <td><p>Nhận tiền từ acc : <?php echo $history_rent->getUsername(); ?> </p><p> Người thuê : <?php echo $history_rent->getCustomer()->getFbName(); ?> </p><p> Số lần gia hạn : <?php echo $history_rent->getGiaHanTimes(); ?></p>
+	      </td>
+	    </tr>
+	    <?php endforeach; ?>
+	  </tbody>
+	</table>
+</article>

@@ -1,0 +1,102 @@
+<?php echo $this->headTitle("Rút Tiền") ?>
+
+<article class="ui container wrapper">    
+    <?php echo $this->partial('partial/nav_shop'); ?>
+    <?php if(!empty($this->errors)): ?>
+    <div class="ui icon warning message mt-15">
+      <i class="warning circle icon"></i>
+      <div class="content">
+        <div class="header">
+          LỖI
+        </div>
+        <?php foreach($this->errors as $k => $v): ?>
+        <p><?php echo $v; ?></p>
+    	<?php endforeach; ?>
+      </div>
+    </div>
+	<?php endif; ?>
+	<?php if(!empty($this->flash)): ?>
+    <div class="ui icon success message mt-15">
+      <i class="checkmark icon"></i>
+      <div class="content">
+        <div class="header">
+          THÔNG BÁO
+        </div>
+        <?php foreach($this->flash as $k => $v): ?>
+        <p><?php echo $v; ?></p>
+    	<?php endforeach; ?>
+      </div>
+    </div>
+	<?php endif; ?>
+    <div class="ui icon message mt-15">
+      <i class="warning circle icon"></i>
+      <div class="content">
+        <div class="header">
+          LƯU Ý
+        </div>
+        <p>Kiểm tra thật kĩ thông tin về ngân hàng đã đúng chưa , admin sẽ không chịu trách nhiệm nếu bạn ghi sai thông tin  !</p>
+        <p>Chỉ được rút số tiền từ 200,000 VNĐ trở lên !</p>
+      </div>
+    </div>
+    <div class="ui column doubling stackable grid">
+	    <div class="ten wide column">
+		   	<h3 class="ui header">YÊU CẦU RÚT TIỀN</h3>
+		   	<?php $form = $this->form;
+            $form->prepare();
+            $form->setAttribute('action',$this->url('shop/defaults',array('action' => 'shop-withdraw')));
+            $form->setAttribute('class', 'ui form');
+            $form->setAttribute('id', 'form_withdraw');
+            echo $this->form()->openTag($form);
+            echo $this->formElement($form->get('csrf')); ?>
+		      <div class="field">
+		        <label>Số tiền cần rút</label>
+		        <input type="text" name="money">
+		      </div>
+		      <div class="field">
+		        <label>Ghi chú</label>
+		        <textarea style="border-radius: 0px;" name="note"></textarea>
+		      </div>
+		      <button type="submit" class="ui secondary button fluid">
+		        GỬI YÊU CẦU
+		      </button>
+		     <?php 
+		            $this->form()->closeTag();
+		        ?>
+	    </div>
+	    <div class="six wide column">
+	    	<h3 class="ui header">CHÚ THÍCH</h3>
+	    	<div class="ui tertiary segment">
+			  <p>Nếu chưa nhận được tiền hãy báo cáo với admin qua fanpage</p>
+			</div>
+	    	<div class="ui raised segments" style="box-shadow: none;border:1px solid rgba(34,36,38,.15);">
+			  <div class="ui segment">
+			    <p><i class="checkmark icon"></i> <strong>admin đã gửi tiền cho bạn</strong></p>
+			  </div>
+			  <div class="ui segment">
+			    <p><i class="warning icon"></i> <strong>admin chưa gửi tiền cho bạn</strong></p>
+			  </div>
+			</div>
+			<h3 class="ui header">LỊCH SỬ RÚT TIỀN</h3>
+	    	<div class="ui relaxed divided list">
+	    	<?php if(!empty($this->history_withdraw)): ?>
+	    	<?php foreach($this->history_withdraw as $k => $v): ?>
+			  <div class="item">
+			  	<?php if($v->getIsSend() == 1): ?>
+			    <i class="checkmark large middle aligned icon"></i>
+				<?php elseif($v->getIsSend() == 0): ?>
+				<i class="warning large middle aligned icon"></i>
+				<?php endif; ?>
+			    <div class="content">
+			      <p class="header"><?php echo number_format($v->getMoney()); ?> VNĐ</p>
+			      <div class="description"><?php echo \Carbon\Carbon::parse($v->getTimeCreated())->format('H:i:s d/m/Y'); ?></div>
+			      <div class="description">Ghi chú : <?php echo $v->getNote(); ?></div>
+			    </div>
+			  </div>
+			 <?php endforeach; ?>
+			<?php else: ?>
+				<p>Không có lịch sử rút tiền</p>
+			<?php endif; ?>
+			</div>
+	    </div>
+	</div>
+</article>

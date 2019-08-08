@@ -1,0 +1,31 @@
+<?php if($this->FrontendData()->CheckShop() == true): ?>
+<section class="filter filter-shop" style="display: flex;justify-content: space-between;align-items: center;">
+  <div>
+    <button href="<?php echo $this->url('shop/defaults',array('action' => 'shop-reup')); ?>" class="btn-filter <?php echo ($this->action == 'shop-reup') ? 'active' : ''; ?>">RE UP</button>
+    <button href="<?php echo $this->url('shop/defaults',array('action' => 'shop-statistical')); ?>" class="btn-filter <?php echo ($this->action == 'shop-statistical') ? 'active' : ''; ?>">THỐNG KÊ</button>
+    <button href="<?php echo $this->url('shop/defaults',array('action' => 'shop-list')); ?>" class="btn-filter <?php echo ($this->action == 'shop-list') ? 'active' : ''; ?>">DANH SÁCH ACC</button>
+    <button href="<?php echo $this->url('shop/defaults',array('action' => 'shop-history')); ?>" class="btn-filter <?php echo ($this->action == 'shop-history') ? 'active' : ''; ?>">LỊCH SỬ GIAO DỊCH</button>
+    <button href="<?php echo $this->url('shop/defaults',array('action' => 'shop-withdraw')); ?>" class="btn-filter <?php echo ($this->action == 'shop-withdraw') ? 'active' : ''; ?>">RÚT TIỀN</button>
+  </div>
+  <div>
+    <button href="<?php echo $this->url('shop/defaults',array('action' => 'shop-dashboard')); ?>" class="btn-filter <?php echo ($this->action == 'shop-dashboard') ? 'active' : ''; ?>"><i class="home icon m-0"></i></button>
+    <button href="<?php echo $this->url('shop/defaults',array('action' => 'shop-setting')); ?>" class="btn-filter <?php echo ($this->action == 'shop-setting') ? 'active' : ''; ?>"><i class="setting icon m-0"></i></button>
+    <button href="<?php echo $this->url('shop/defaults',array('action' => 'shop-help')); ?>" class="btn-filter <?php echo ($this->action == 'shop-help') ? 'active' : ''; ?>"><i class="help circle outline icon m-0"></i></button>
+    <button href="<?php echo $this->url('shop/defaults',array('action' => 'shop-add')); ?>" class="btn-filter <?php echo ($this->action == 'shop-add') ? 'active' : ''; ?>"><i class="plus icon m-0"></i> THÊM ACC</button>
+  </div>
+</section>
+<!-- <section class="filter" style="display: flex;justify-content: space-between;align-items: center;">
+  <div class="">
+      <button class="btn-filter active">Tất cả</button>
+      <button class="btn-filter">Sẵn sàng</button>
+      <button class="btn-filter">Đang thuê</button>
+      <button class="btn-filter">Ngừng hoạt hoạt</button>
+  </div>
+  <div class="">
+      <button class="btn-filter active">Tất cả</button>
+      <button class="btn-filter">Sẵn sàng</button>
+      <button class="btn-filter">Đang thuê</button>
+      <button class="btn-filter">Ngừng hoạt hoạt</button>
+  </div>
+</section> -->
+<?php endif; ?>

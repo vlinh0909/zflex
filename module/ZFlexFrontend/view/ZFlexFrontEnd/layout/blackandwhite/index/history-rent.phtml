@@ -1,0 +1,193 @@
+<?php echo $this->headTitle("Lịch Sử Thuê Acc") ?>
+<?php 
+$url_ajax_handing_gia_han = $this->url('ajax',array('action' => 'load-handing-gia-han'));
+$url_ajax_gia_han = $this->url('ajax',array('action' => 'load-gia-han'));
+$url_ajax_report_rent = $this->url('ajax',array('action' => 'load-report-rent'));
+$url_ajax_login = $this->url('login');
+$url_ajax_history_rent = $this->url('history_rent');
+$url_ajax_card = $this->url('card');
+ $this->inlineScript()->captureStart();
+ 
+echo <<<JS
+
+function htmlSuccess(title = 'THUÊ TÀI KHOẢN',value = 'THUÊ THÀNH CÔNG',is_button = 1)
+    {
+      var xhtml ='';
+      xhtml += '<div id="popupR">';
+      xhtml += '<h4 class="text-center" >'+title+'</h4>';
+      xhtml += '<div class="hr"></div>';
+      xhtml += '<h3 class="text-center"><strong>'+value+'</strong></h3>';
+      if(is_button == 1)
+      {
+        xhtml += '<div class="text-center w-100">';
+          xhtml += '<a href="$url_ajax_history_rent" class="ui button large black mb-15">VÀO LỊCH SỬ GIAO DỊCH</a>';
+        xhtml += '</div>';
+      }else if(is_button == 'login'){
+        xhtml += '<div class="text-center w-100">';
+          xhtml += '<a href="$url_ajax_login" class="ui button large black mb-15">ĐĂNG NHẬP</a>';
+        xhtml += '</div>';
+      }else if(is_button == false)
+      {
+        xhtml += '<div class="text-center w-100">';
+          xhtml += '<button id="close" class="ui button fluid black mb-15">ĐÓNG</button>';
+        xhtml += '</div>';
+      }
+      xhtml += '</div>';
+      return xhtml;
+    }
+
+    function htmlError(data = 'THUÊ TÀI KHOẢN')
+    {
+      var xhtml ='';
+      xhtml += '<div id="popupR">';
+      xhtml += '<h4 class="text-center" >'+data+'</h4>';
+      xhtml += '<div class="hr"></div>';
+      xhtml += '<h3 class="text-center"><strong>KHÔNG ĐỦ TIỀN</strong></h3>';
+      xhtml += '<div class="text-center w-100">';
+        xhtml += '<a href="$url_ajax_card" class="ui button large black mb-15">NẠP TIỀN</a>';
+      xhtml += '</div>';
+      xhtml += '</div>';
+      return xhtml;
+    }
+    $("#popupInfo").on('click','#btn-giahan',function(){
+      var id = strip_tags($(this).data('id'));
+      var time = $("#sl_rent_time").val();
+      $.ajax({
+        type: 'POST',
+        url: "$url_ajax_handing_gia_han",
+        beforeSend: function() {
+            $("#popupInfo").html(htmlLoad());
+        },
+        data: { id: id,time: time},
+        success: function(data)
+        {
+          var result = data.result;
+          
+          if(result == 0)
+          {
+            $("#popupInfo").html(htmlError('GIA HẠN TÀI KHOẢN'));
+          }else if(result == 1){
+            $("#popupInfo").html(htmlSuccess('GIA HẠN TÀI KHOẢN','GIA HẠN TÀI KHOẢN THÀNH CÔNG !'));
+          }
+          move_center('#popupCenter');
+        },
+        dataType: 'json'
+      });
+    });
+    $(".btn-giahan").click(function(){
+        var id = strip_tags($(this).data('id'));
+        $.ajax({
+          type: 'POST',
+          url: "$url_ajax_gia_han",
+          data: { id: id},
+          success: function(data)
+          {
+            var result = data.result;
+            
+            if(result == 0)
+            {
+              $("#popupInfo").html(htmlError('GIA HẠN TÀI KHOẢN'));
+            }else if(result == 'not'){
+              $("#popupInfo").html(htmlSuccess('GIA HẠN TÀI KHOẢN','TÀI KHOẢN NÀY KHÔNG CHO PHÉP GIA HẠN !'));
+            }
+            else if(result == 'error')
+            {
+              $("#popupInfo").html(htmlSuccess('GIA HẠN TÀI KHOẢN','BẠN KHÔNG THỂ GIA HẠN TÀI KHOẢN NÀY !'));
+            }
+            else{
+              value = {username: result.username,url_shop: result.url_shop,shop: result.shop,img: result.img,value_options: result.value_options,id: id};
+              $("#popupInfo").html(htmlGiaHan(value));
+              
+            }
+            move_center('#popupCenter');
+          },
+          dataType: 'json'
+        });
+        
+    $("#popupBg").show();
+  });
+  $("#popupInfo").on('click','.btn-send-report',function(){
+    var id = strip_tags($(this).data('id'));
+    var msg = strip_tags($("[name=msg_report_"+id+"]").val());
+    if(msg != ''){
+      $.ajax({
+        type: 'POST',
+        url: "$url_ajax_report_rent",
+        beforeSend: function() {
+            $("#popupInfo").html(htmlLoad());
+        },
+        data:{id: id,msg: msg},
+        success: function(data)
+        {
+          var result = data.result;
+          console.log(result);
+          if(result == true){
+            $("#popupInfo").html(htmlSuccess("THÔNG BÁO !","GỬI BÁO LỖI THÀNH CÔNG !"));
+          }else if(result == 'error'){
+            $("#popupInfo").html(htmlSuccess("LỖI !","BẠN KHÔNG THỂ BÁO LỖI TÀI KHOẢN NÀY !"));
+          }
+          
+        },
+        dataType: 'json'
+      });
+    }
+  });
+JS;
+$this->inlineScript()->captureEnd(); ?>
+<article class="ui container wrapper">
+    <section class="filter"></section>
+    <h3 id="aa">LỊCH SỬ THUÊ ACC</h3>
+    <div class="ui column doubling stackable grid m-0">
+      <table class="ui celled table p-0" id="table_history_rent">
+        <thead>
+          <tr>
+            <th>#ID</th>
+            <th>Tài khoản</th>
+            <th>Mật khẩu</th>
+            <th>Shop</th>
+            <th width="30%">Thông tin</th>
+            <th>Thời gian còn lại</th>
+            <th width="25%"></th>
+          </tr>
+        </thead>
+        <tbody>
+          <?php 
+          foreach($this->history_rent as $history_rent): ?>
+          <tr data-id="account_<?php echo $history_rent->getRent()->getId(); ?>">
+            <td>#<?php echo $history_rent->getRent()->getId(); ?></td>
+            <td>
+            <?php echo $history_rent->getUsername(); ?>    
+            </td>
+            <td>
+              <?php $time_end = \Carbon\Carbon::parse($history_rent->getTimeEnd());
+              $gt = $time_end->gt(\Carbon\Carbon::now());
+              if($gt == true):
+              ?>
+              <span style="cursor: pointer;font-weight: 500;" onclick="copyText2('<?php echo $history_rent->getPassword(); ?>')"><i class="icon copy"></i><?php echo $history_rent->getPassword(); ?></span></td>
+              <?php else: ?>
+              <span style="font-weight: 500;">HẾT HẠN</span></td>
+              <?php endif; ?>
+            <td>
+              <a href="<?php echo $this->url('shop_info',array('id' =>$history_rent->getBoss()->getShop()->getId() )); ?>"><?php echo $history_rent->getBoss()->getShop()->getShopName(); ?></a>
+            </td>
+            <td>
+              <?php echo $history_rent->getRent()->getDescription(); ?>
+            </td>
+            <td>
+            <span class="time_format" data-time="<?php echo $time_end ?>" ></span>
+
+            </td>
+
+            
+            <td>
+              <button class="ui button black mini btn-giahan" data-id="<?php echo $history_rent->getRent()->getId(); ?>">GIA HẠN</button>
+              <a href="<?php echo $history_rent->getRent()->getCustomer()->getShop()->getUrlFacebook(); ?>" target="_blank" class="ui button blue mini"><i class="icon facebook square m-0"></i></a>
+              <button class="ui button mini btn-report-rent" data-id="<?php echo $history_rent->getRent()->getId(); ?>">BÁO LỖI</button>
+            </td>
+          </tr>
+          <?php
+          endforeach; ?>
+        </tbody>
+      </table>
+    </div>
+  </article>

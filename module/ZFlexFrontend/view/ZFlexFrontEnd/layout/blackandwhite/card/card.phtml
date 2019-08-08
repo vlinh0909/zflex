@@ -1,0 +1,119 @@
+<?php echo $this->headTitle("Nạp Card") ?>
+<?php 
+$url_ajax_card_handing = $this->url('card-handing');
+$url_ajax_home = $this->url('home');
+ $this->inlineScript()->captureStart();
+ 
+echo <<<JS
+    
+    $("#card").ajaxForm({
+    type:"POST",
+    url : "$url_ajax_card_handing",
+    dataType: 'json',
+    beforeSubmit : function() {
+        $("#card").addClass('loading');
+    },
+    success: function(data){
+      if(data.result.code == 0)
+      {
+        swal({ 
+            title: "Thành công !",
+            text: "Nạp thành công "+data.result.info_card+ " vào tài khoản ! Quay về trang chủ !",
+            type: "success" 
+        },
+          function(){
+            window.location.href = '$url_ajax_home';
+        });
+      }else{
+        swal({ 
+            title: "Lỗi !",
+            text: data.result.msg,
+            type: "error" 
+        });
+      }
+      $("#card").removeClass('loading');
+    }});
+JS;
+$this->inlineScript()->captureEnd(); ?>
+<article class="ui container wrapper">
+      <section class="filter"></section>
+      <h3 style="text-align: center;">Nạp tiền bằng thẻ cào</h3>
+      <div class="ui one column stackable center aligned grid py-15">
+        <div class="ui steps p-0">
+          <?php 
+          $fb_info = $this->FrontendData()->CustomerInfo();
+          if(!$fb_info):
+           ?>
+          <div class="active step">
+          <?php else: ?>
+          <div class="step">
+          <?php endif; ?>
+            <i class="user icon"></i>
+            <div class="content">
+              <div class="title">Đăng nhập</div>
+              <div class="description">Đăng nhập tài khoản bằng facebook</div>
+            </div>
+          </div>
+          <?php
+          if($fb_info):
+           ?>
+          <div class="active step">
+          <?php else: ?>
+          <div class="step">
+          <?php endif; ?>
+            <i class="dollar icon"></i>
+            <div class="content">
+              <div class="title">Nạp tiền</div>
+              <div class="description">Nạp tiền bằng thẻ cào</div>
+            </div>
+          </div>
+          <div class="step">
+            <i class="info icon"></i>
+            <div class="content">
+              <div class="title">Thuê tài khoản</div>
+              <div class="description">Tìm và thuê ngay một tài khoản</div>
+            </div>
+          </div>
+        </div>
+    </div>
+    <div class="ui icon message">
+        <i class="info icon"></i>
+        <div class="content">
+          <div class="header">
+            Tình trạng các loại thẻ
+          </div>
+          <?php $json = file_get_contents('https://sv.gamebank.vn/trang-thai-he-thong-2');
+        $obj = json_decode($json)[0]; ?>
+          <p>Viettel : <?php echo ($obj->Viettel == 1 ? 'Đang hoạt động' : 'Không hoạt động'); ?></p>
+          <p>Mobiphone : <?php echo ($obj->Mobiphone == 1 ? 'Đang hoạt động' : 'Không hoạt động'); ?></p>
+          <p>Vinaphone : <?php echo ($obj->Vinaphone == 1 ? 'Đang hoạt động' : 'Không hoạt động'); ?></p>
+        </div>
+      </div>
+      <form class="ui form" id="card">
+        <div class="field">
+          <label>Loại thẻ</label>
+          <select class="ui fluid dropdown" name="card_type_id" required>
+            <option value="1">Viettel</option>
+            <option value="2">Mobiphone</option>
+            <option value="3">Vina</option>
+          </select>
+        </div>
+        <div class="field">
+          <label>Số Serial</label>
+          <input type="text" name="seri" required >
+        </div>
+        <div class="field">
+          <label>Mã thẻ cào</label>
+          <input type="text" name="pin" required >
+        </div>
+        <?php if($fb_info): ?>
+        <button class="ui button black fluid large button-card" type="submit">Nạp thẻ</button>
+        <?php else: ?>
+        <button class="ui button black fluid large" type="button" onclick="swal({ 
+          title: 'Lỗi !',
+          text:'Bạn chưa đăng nhập Facebook',
+          type: 'error' },function(){window.location.href = '/zflex/fb_login.html';
+        });">Nạp thẻ</button> 
+        <?php endif; ?>
+      </form>
+    </article>

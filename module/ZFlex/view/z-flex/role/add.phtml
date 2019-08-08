@@ -1,0 +1,69 @@
+<?php echo $this->headTitle("Thêm Luật") ?>
+<?php
+    $form = $this->form;
+    $form->prepare();
+    $form->setAttribute('action',$this->url('zflex/role',array('action' => 'add')));
+    echo $this->form()->openTag($form);
+    echo $this->formElement($form->get('csrf'));
+?>
+<div class="box bg-white mt-3">
+    <div class="box-heading">
+        <p class="lead">Thêm luật</p>
+        <div class="btn-add">
+            <button class= "btn btn-info">Lưu <i class="fa fa-floppy-o" aria-hidden="true"></i></button>
+        </div>
+    </div>
+    <div class="box-body box-body-form">
+        <div class="box-form">
+            <div class="box-form-heading">
+                <small class="box-form-title">Thông tin luật</small>
+                <p class="box-close">
+                    <i class="fa fa-angle-down" aria-hidden="true"></i>
+                </p>
+            </div>
+            <div class="box-form-content">
+                <div class="row">
+                    <div class="col-4">
+                        <?php echo $this->formLabel($form->get('name')); ?>
+                    </div>
+                    <div class="col-8">
+                        <?php echo $this->formElement($form->get('name')); ?>
+                        <?php echo $this->formElementErrors($form->get('name')); ?>
+                    </div>
+                    <div class="col-4">
+                        <?php echo $this->formLabel($form->get('slug')); ?>
+                    </div>
+                    <div class="col-8">
+                        <?php echo $this->formElement($form->get('slug')); ?>
+                        <?php echo $this->formElementErrors($form->get('slug')); ?>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="box-form mt-3">
+            <div class="box-form-heading">
+                <small class="box-form-title">Cấu hình</small>
+                <p class="box-close">
+                    <i class="fa fa-angle-down" aria-hidden="true"></i>
+                </p>
+            </div>
+            <div class="box-form-content">
+                <div class="row">
+                    <div class="col-4">
+                        <label class="box-left-title">Access</label>
+                    </div>
+                    <div class="col-8">
+                        <div class="row w-100">
+                            <?php 
+                                echo $this->Layout()->CheckboxRole();
+                            ?>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<?php 
+    $this->form()->closeTag();
+?>

@@ -1,0 +1,40 @@
+<?php echo $this->headTitle('Phân Quyền') ?>
+<div class="box bg-white mt-3">
+    <div class="box-heading">
+        <p class="lead">Phân quyền</p>
+        <p class="btn-add">
+            <a href="<?php echo $this->Path()->PermissionAdd(); ?>" class="btn btn-info">Thêm <i class="icon-plus3"></i></a>
+        </p>
+    </div>
+    <div class="box-body">
+        <?php 
+            echo $this->Layout()->FlashMessenger();
+        ?>
+        <table class="table table-responsive table-bordered">
+            <thead>
+                <tr>
+                    <th>Tên</th>
+                    <th>Slug</th>
+                    <th>Luật</th>
+                    <th width="100">Sửa</th>
+                    <th width="100">Xóa</th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php 
+                    $permissions = $this->permissions;
+                    foreach($permissions as $permission):
+                ?>
+                        <tr>
+                            <td><?php echo $permission->getName() ?></td>
+                            <td><?php echo $permission->getSlug() ?></td>
+                            <td><?php echo $permission->getRoleId()->getName() ?></td>
+                            <td><a href='<?php echo $this->Path()->PermissionEdit($permission->getId()) ?>' class='btn btn-outline-warning'>Sửa</a></td>
+                            <td><?php echo $this->Layout()->Button()->Delete($this->Path()->PermissionDelete($permission->getId()),'ajax') ?></td>
+                            
+                        </tr>
+                <?php endforeach ?>
+            </tbody>
+        </table>    
+    </div>
+</div>

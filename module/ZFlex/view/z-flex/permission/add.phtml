@@ -1,0 +1,67 @@
+<?php echo $this->headTitle("Thêm Quyền") ?>
+<?php
+    $form = $this->form;
+    $form->prepare();
+    $form->setAttribute('action',$this->url('zflex/permission',array('action' => 'add')));
+    echo $this->form()->openTag($form);
+    echo $this->formElement($form->get('csrf'));
+?>
+<div class="box bg-white mt-3">
+    <div class="box-heading">
+        <p class="lead">Thêm quyền</p>
+        <div class="btn-add">
+            <button class= "btn btn-info">Lưu <i class="fa fa-floppy-o" aria-hidden="true"></i></button>
+        </div>
+    </div>
+    <div class="box-body box-body-form">
+        <div class="box-form">
+            <div class="box-form-heading">
+                <small class="box-form-title">Thông tin quyền</small>
+                <p class="box-close">
+                    <i class="fa fa-angle-down" aria-hidden="true"></i>
+                </p>
+            </div>
+            <div class="box-form-content">
+                <div class="row">
+                    <div class="col-4">
+                        <?php echo $this->formLabel($form->get('name')); ?>
+                    </div>
+                    <div class="col-8">
+                        <?php echo $this->formElement($form->get('name')); 
+                              echo $this->formElementErrors($form->get('name')); ?>
+                    </div>
+                    <div class="col-4">
+                        <?php echo $this->formLabel($form->get('slug')); ?>
+                    </div>
+                    <div class="col-8">
+                        <?php echo $this->formElement($form->get('slug')); 
+                              echo $this->formElementErrors($form->get('slug')); ?>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="box-form mt-3">
+            <div class="box-form-heading">
+                <small class="box-form-title">Cấu hình</small>
+                <p class="box-close">
+                    <i class="fa fa-angle-down" aria-hidden="true"></i>
+                </p>
+            </div>
+            <div class="box-form-content">
+                <div class="row">
+                    <div class="col-4">
+                        <?php echo $this->formLabel($form->get('role_id')); ?>
+                        <p class="box-form-muted">Gán luật cho quyền</p>
+                    </div>
+                    <div class="col-8">
+                        <?php echo $this->formElement($form->get('role_id')); 
+                              echo $this->formElementErrors($form->get('role_id')); ?>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<?php 
+    $this->form()->closeTag();
+?>

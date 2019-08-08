@@ -1,0 +1,88 @@
+<div class="box bg-white mt-3">
+    <div class="box-heading">
+        <p class="lead">Danh sách khách hàng</p>
+        <p class="btn-add">
+            <a href="<?php echo $this->Path()->CustomerAdd(); ?>" class="btn btn-info">Thêm <i class="icon-plus3"></i></a>
+        </p>
+    </div>
+    <form action="<?php echo $this->Path()->CustomerMulti(); ?>" method="POST">
+    <div class="box-body">
+        <?php 
+            echo $this->Layout()->FlashMessenger();
+        ?>
+        <table class="table table-responsive table-bordered" data-toggle="table" data-pagination="true" data-search="true">
+            <thead>
+                <tr>
+                    <th width="50">STT</th>
+                    <th>Tên tài khoản</th>
+                    <th width="200">Đăng ký lúc</th>
+                    <th width="150">Tiền</th>
+                    <th width="150">Tình trạng</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php 
+                $stt = 1;
+                foreach($this->paging as $k => $v): 
+                ?>
+                <tr>
+                    <td><?php echo $stt; ?></td>
+                    <td><img src="https://graph.facebook.com/<?php echo $v->getFbId(); ?>/picture" width="35" height="35" style="margin-right: 5px;"><?php echo $v->getFbName(); ?></td>
+                    <td><?php echo \Carbon\Carbon::parse($v->getTimeCreated())->format('H:i:s d/mY'); ?></td>
+                    <td><?php echo number_format($v->getMoney()); ?></td>
+                    <td><?php echo ($v->getIsBlock() == 1) ? "<span class='label label-disabled'>bị khóa</span>" : "<span class='label label-activated'>kích hoạt</span>" ?></td>
+                    <td><a href="<?php echo $this->url('zflex/customer',array('action' => 'edit','id' => $v->getId())); ?>" class="btn btn-outline-warning">Sửa</a></td>
+                </tr>
+                <?php 
+                $stt++;
+                endforeach; ?>
+            </tbody>
+        </table>
+        <div class="box-pagination">
+            <?php
+                echo $this->paginationControl(
+                    $this->paging,
+                    'sliding',
+                    array(
+                        'partial/pagination.phtml',
+                        'zflex'
+                    ),
+                    array(
+                        'route' => 'zflex/customer',
+                        'params' => array(
+                            'action' => 'list'
+                        )
+                    )
+                );
+            ?>
+        </div>   
+    </div>
+    </form>
+</div>
+
+<div class="modal fade" id="lock" role="dialog" aria-hidden="true">
+  <div class="modal-dialog">
+    <form action="<?php echo $this->url('zflex/customer',array('action' => 'lock')); ?>">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h6 class="modal-title">Khóa tài khoản</h6>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            
+              <div class="form-group">
+                <label>Lý do:</label>
+                <textarea class="form-control rounded-0" rows="5"></textarea>
+              </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
+            <button type="submit" class="btn btn-info">OK</button>
+          </div>
+        </div>
+    </form>
+  </div>
+</div>

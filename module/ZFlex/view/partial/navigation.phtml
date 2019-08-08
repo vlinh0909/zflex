@@ -1,0 +1,53 @@
+<ul class="<?php echo $this->navigation()->menu()->getUlClass(); ?>">
+    <?php foreach ($this->container as $page): ?>
+        <?php /* @var $page Zend\Navigation\Page\Mvc */ ?>
+        <?php // when using partials we need to manually check for ACL conditions ?>
+        <?php if( ! $page->isVisible() || !$this->navigation()->accept($page)) continue; ?>
+        <?php $hasChildren = $page->hasPages() ?>
+        <?php if( ! $hasChildren): ?>
+            <?php
+                $class="menu-item";
+                $class.=$page->isActive(true)?' active ':'';
+                $class.=$page->get('class')?$page->get('class'):'';
+            ?>
+        <li <?php if($class) echo 'class="'.$this->escapehtmlattr($class).'"';?>>
+            <a href="<?php echo $page->getHref() ?>" <?php if ($page->getTitle()) echo 'title="'.$this->escapehtmlattr($page->getTitle()).'"'; ?>>
+                <?php if ($page->get('icon')):?>
+                <i class="<?php echo $page->get('icon');?>"></i>
+                <?php endif;?>
+                <p><?php echo $this->translate($page->getLabel()) ?></p>
+            </a>
+        </li>
+        <?php else: ?>
+        <li class="menu-item <?php if ($page->isActive(true)) echo 'active';?>">
+            <?php if($page->get('hidden')): ?>
+            <a href="<?php echo $page->getHref() ?>">
+                <?php if ($page->get('icon')):?>
+                <i class="<?php echo $page->get('icon');?>"></i>
+                <?php endif;?>
+                <p><?php echo $this->translate($page->getLabel()) ?></p>
+            </a>
+            <?php else: ?>
+            <a href="javascript:void(0)">
+                <?php if ($page->get('icon')):?>
+                <i class="<?php echo $page->get('icon');?>"></i>
+                <?php endif;?>
+                <p><?php echo $this->translate($page->getLabel()) ?></p>
+            </a>
+
+            <ul class="menu-child">
+            <?php foreach($page->getPages() as $child): ?>
+                <?php // when using partials we need to manually check for ACL conditions ?>
+                <?php if( ! $child->isVisible() || !$this->navigation()->accept($child) || $child->get('hidden')) continue; ?>
+                <li class="menu-child-item">
+                    <a href="<?php echo $child->getHref() ?>" <?php if ($child->getTitle()) echo 'title="'.$this->translate($child->getTitle()).'"'; ?>>
+                        <?php echo $this->translate($child->getLabel()) ?>
+                    </a>
+                </li>
+            <?php endforeach ?>
+            </ul>
+            <?php endif ?>
+         </li>
+        <?php endif ?>
+    <?php endforeach ?>
+</ul>

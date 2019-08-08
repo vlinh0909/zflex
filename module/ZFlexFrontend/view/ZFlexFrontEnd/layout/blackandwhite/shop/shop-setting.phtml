@@ -1,0 +1,79 @@
+<?php echo $this->headTitle("Cài Đặt") ?>
+  <?php $shop = $this->shop; ?>
+  <article class="ui container wrapper">    
+    <?php echo $this->partial('partial/nav_shop'); ?>
+    <?php if($this->FrontendData()->CheckShop() == false): ?>
+    <div class="ui icon warning message mt-15">
+      <i class="notched circle loading icon"></i>
+      <div class="content">
+        <div class="header">
+          CẬP NHẬT THÔNG TIN
+        </div>
+        <p>Bạn cần phải điền đầy đủ thông tin để sử dụng các chức năng của website !</p>
+      </div>
+    </div>
+    <?php endif; ?>
+    <div class="ui icon message">
+      <i class="configure icon"></i>
+      <div class="content">
+        <div class="header">
+          CÀI ĐẶT THÔNG TIN CHO SHOP <span style="text-transform: uppercase;text-decoration: underline;"><?php echo $shop['shop_name']; ?></span>
+        </div>
+      </div>
+    </div>
+    <form class="ui form" method="POST" id="form_shop" action="<?php echo $this->url('shop/defaults',array('action' => 'shop-setting')); ?>"  enctype="multipart/form-data">
+      <div class="field">
+        <label>Link Facebook / Fanpage hỗ trợ</label>
+        <input type="text" name="url_facebook"  placeholder="https://www.facebook.com/" value="<?php echo $shop['url_facebook']; ?>">
+      </div>
+      <div class="field">
+        <label>Số điện thoại</label>
+        <input type="text" name="phone_number" value="<?php echo $shop['phone_number']; ?>">
+      </div>
+      <div class="field">
+        <label>Hình Banner</label>
+        <div>
+            <label for="file" class="ui icon button" style="margin-bottom: 8px;">
+                <i class="file icon"></i>
+                Thay Đổi</label>
+            <input type="file" id="file" name="banner" onchange="readURL(this);" style="display:none">
+        </div>
+        <img src="<?php echo $this->FrontendPath()->BannerShop($shop['banner']); ?>" class="ui large image image-review">
+      </div>
+      <section class="filter"></section>
+      <div class="ui icon message">
+        <i class="money icon"></i>
+        <div class="content">
+          <div class="header">
+            CÀI ĐẶT THANH TOÁN
+          </div>
+        </div>
+      </div>
+      <div class="field">
+          <label>Ngân hàng</label>
+          <?php 
+          $bank = $this->Data()->Bank();
+          ?>
+          <select class="ui fluid dropdown" name="bank" class="required">
+            <?php foreach($bank as $k => $value): ?>
+            <?php if($k == $shop['bank']): ?>
+            <option selected value="<?php echo $k ?>"><?php echo $value; ?></option>
+            <?php else: ?>
+            <option value="<?php echo $k ?>"><?php echo $value; ?></option>
+            <?php endif; ?>
+            <?php endforeach; ?>
+          </select>
+        </div>
+      <div class="field">
+        <label>Số Tài Khoản</label>
+        <input type="text" name="stk_bank" required value="<?php echo $shop['stk_bank']; ?>">
+      </div>
+      <div class="field">
+        <label>Tên Chủ Tài Khoản</label>
+        <input type="text" name="ctk_bank" required value="<?php echo $shop['ctk_bank']; ?>">
+      </div>
+      <button type="submit" class="ui secondary button fluid">
+        CẬP NHẬT THÔNG TIN
+      </button>
+    </form>
+  </article>

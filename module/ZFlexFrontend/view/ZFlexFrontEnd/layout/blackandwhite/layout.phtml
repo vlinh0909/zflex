@@ -1,0 +1,142 @@
+<!-- Code được viết bởi : https://www.facebook.com/vulinh007 -->
+<?php echo $this->doctype(); ?>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <?php echo $this->headTitle($this->translate($this->site['sitename']))->setSeparator(' - ')->setAutoEscape(false) ?>
+
+    <?php echo $this->headMeta()
+        ->appendName('viewport', 'width=device-width, initial-scale=1.0')
+        ->appendName('description', $this->site['sitedescription'])
+        ->appendName('keywords', $this->site['sitedescription'])
+        ->appendName('author', $this->site['sitedescription'])
+        ->appendProperty('og:title', $this->site['sitedescription'])
+        ->appendProperty('og:description', $this->site['sitedescription'])
+        ->appendHttpEquiv('X-UA-Compatible', 'IE=edge')
+    ?>
+
+    <!-- Le styles -->
+    <?php echo $this->headLink(array('rel' => 'shortcut icon', 'type' => 'image/vnd.microsoft.icon', 'href' => $this->basePath() . '/img/favicon.ico'))
+                    ->prependStylesheet($this->FrontendPath()->PublicTheme()."/css/style.css")
+                    ->prependStylesheet("https://cdnjs.cloudflare.com/ajax/libs/sweetalert/1.1.3/sweetalert.min.css")
+                    ->prependStylesheet('https://unpkg.com/flickity@2/dist/flickity.min.css')
+                    ->prependStylesheet('https://fonts.googleapis.com/css?family=Roboto:300,400,500,700,900')
+                    ->prependStylesheet($this->FrontendPath()->PublicTheme().'/plugin/semantic/semantic.min.css')
+    ?>
+</head>
+
+<body>
+  
+    <div id="popupBg" style="display: none;">
+      
+      <div id="popupCenter">
+        <i class="icon close"></i>
+        <div id="popupInfo">
+          
+        </div>
+      </div>
+
+    </div>
+    <div class="ui stackable container menu" style="margin-top: 0px;">
+      <?php if($this->menu):
+      foreach($this->menu as $k => $v): 
+      if(empty($v['children'])):
+      ?>
+      <a href="<?php echo $v['url']; ?>" class="item" target="<?php echo $v['target']; ?>"><?php echo $v['title']; ?></a>
+      <?php
+      else:
+      ?>
+      <div class="ui dropdown item">
+          <?php echo $v['title'] ?>
+          <i class="dropdown icon"></i>
+          <div class="menu">
+            <?php 
+            foreach($v['children'] as $k2 => $val):
+            ?>
+            <a class="item" href="<?php echo $val['url'] ?>" target="<?php echo $v['target']; ?>" style="text-transform: uppercase !important;"><?php echo $val['title'] ?></a>
+            <?php endforeach; ?>
+          </div>
+        </div>
+      <?php
+      endif;
+      endforeach; 
+      endif;
+      ?>
+      
+      <div class="right menu">
+        <?php if(!empty($this->facebook_id)): ?>
+        <div class="ui dropdown item">
+          <img class="ui rounded image" height="25px" style="margin-right: 5px;" src="//graph.facebook.com/<?php echo $this->facebook_id;?>/picture"> <?php echo $this->facebook_name;?>
+          <i class="dropdown icon"></i>
+          <div class="menu">
+            <div class="header">
+              <i class="tags icon"></i>
+              FID : <span style="color:red;"><?php echo $this->facebook_id; ?></span>
+            </div>
+            <div class="header">
+              <i class="money icon"></i>
+              Tiền : <span style="color:red;"><?php echo number_format($this->money); ?><sup>đ</sup></span></span>
+            </div>
+            <?php 
+            $customer = $this->FrontendData()->CustomerInfo();
+            if($customer->getOpenShop() == 1):
+            ?>
+            <a class="item" href="<?php echo $this->url('shop'); ?>"><i class="home icon"></i> Quản lý shop</a>
+            <?php else: ?>
+            <a class="item" href="<?php echo $this->url('create_shop'); ?>"><i class="plus icon"></i> Tạo shop</a>  
+            <?php endif; ?>
+            <a class="item" href="<?php echo $this->url('history_rent'); ?>"><i class="undo icon"></i> Lịch sử thuê acc</a>
+            <a class="item"><i class="money icon"></i> Nạp tiền</a>
+            <a class="item" href="<?php echo $this->url('fb_logout'); ?>"><i class="power icon"></i> Đăng xuất</a>
+          </div>
+        </div>
+        <?php else: ?>
+        <a href="<?php echo $this->url('login'); ?>" class="item">Đăng Nhập</a>
+        <?php endif; ?>
+      </div>
+    </div>
+
+    <?php echo $this->content; ?>
+
+    <footer class="ui container footer">
+      <div class="ui column doubling stackable grid">
+        <div class="five wide column">
+          <div class="ui icon message">
+            <i class="volume control phone icon"></i>
+            <div class="content">
+              <div class="header">
+                Số điện thoại
+              </div>
+              <p>0909090909</p>
+            </div>
+          </div>
+        </div>
+        <div class="four wide column">
+          <div class="ui list">
+          </div>
+        </div>
+        <div class="seven wide column">
+Với giao diện hiện đại, nguồn acc phong phú và quy trình thuê acc đơn giản, sẽ giúp bạn nhanh chóng thuê được tài khoản ưng ý. Tất cả tài khoản ra trên đều được đảm bảo về độ chính xác và bảo mật.
+        </div>
+      </div>
+    </footer>
+
+    <!-- Scripts -->
+    <?php echo $this->headScript()
+        ->prependFile($this->FrontendPath()->PublicTheme().'/js/app.js')
+        ->prependFile($this->FrontendPath()->PublicTheme().'/plugin/jquery.number.min.js')
+        ->prependFile('https://unpkg.com/flickity@2/dist/flickity.pkgd.min.js')
+        ->prependFile("https://cdnjs.cloudflare.com/ajax/libs/sweetalert/1.1.3/sweetalert.min.js")
+        ->prependFile($this->FrontendPath()->PublicTheme().'/plugin/semantic/semantic.min.js')
+        ->prependFile('http://malsup.github.com/jquery.form.js')
+        ->prependFile('http://cdn.rawgit.com/hilios/jQuery.countdown/2.2.0/dist/jquery.countdown.min.js')
+        ->prependFile('https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.17.0/jquery.validate.min.js')
+        ->prependFile('https://canvasjs.com/assets/script/canvasjs.min.js')
+        ->prependFile($this->FrontendPath()->PublicTheme().'/plugin/jquery.min.js')
+    ; ?>
+    <?php echo $this->inlineScript() ?>
+    
+</body>
+
+</html>

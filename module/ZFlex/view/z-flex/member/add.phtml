@@ -1,0 +1,95 @@
+<?php echo $this->headTitle("Thêm Ban Quản Trị") ?>
+<?php
+    $form = $this->form;
+    $form->prepare();
+    $form->setAttribute('action',$this->url('zflex/member',array('action' => 'add')));
+    echo $this->form()->openTag($form);
+    echo $this->formElement($form->get('csrf'));
+?>
+<div class="box bg-white mt-3">
+    <div class="box-heading">
+        <p class="lead">Chỉnh sửa ban quản trị</p>
+        <div class="btn-add">
+            <button class="btn btn-info">Lưu <i class="fa fa-floppy-o" aria-hidden="true"></i></button>
+        </div>
+    </div>
+    <div class="box-body box-body-form">
+        <div class="box-form">
+            <div class="box-form-heading">
+                <small class="box-form-title">Thông tin ban quản trị</small>
+                <p class="box-close">
+                    <i class="fa fa-angle-down" aria-hidden="true"></i>
+                </p>
+            </div>
+            <div class="box-form-content">
+                <div class="row">
+                    <div class="col-4">
+                        <?php echo $this->formLabel($form->get('email')); ?>
+                    </div>
+                    <div class="col-8">
+                        <?php echo $this->formElement($form->get('email'));
+                              echo $this->formElementErrors($form->get('email')); ?>
+                    </div>
+                    <div class="col-4">
+                        <?php echo $this->formLabel($form->get('username')); ?>
+                    </div>
+                    <div class="col-8">
+                        <?php echo $this->formElement($form->get('username'));
+                              echo $this->formElementErrors($form->get('username'));?>
+                    </div>
+                    <div class="col-4">
+                        <?php echo $this->formLabel($form->get('password')); ?>
+                    </div>
+                    <div class="col-8">
+                        <?php echo $this->formElement($form->get('password'));
+                              echo $this->formElementErrors($form->get('password'));?>
+                    </div>
+                    <div class="col-4">
+                        <?php echo $this->formLabel($form->get('fullname')); ?>
+                    </div>
+                    <div class="col-8">
+                        <?php echo $this->formElement($form->get('fullname'));
+                              echo $this->formElementErrors($form->get('fullname'));?>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="box-form mt-3">
+            <div class="box-form-heading">
+                <small class="box-form-title">Cấu hình</small>
+                <p class="box-close">
+                    <i class="fa fa-angle-down" aria-hidden="true"></i>
+                </p>
+            </div>
+            <div class="box-form-content">
+                <div class="row">
+                    <div class="col-4">
+                        <?php echo $this->formLabel($form->get('permission')); ?>
+                    </div>
+                    <div class="col-8">
+                        <?php echo $this->formElement($form->get('permission'));
+                              echo $this->formElementErrors($form->get('permission'));?>
+                    </div>
+                    <div class="col-4">
+                        <?php echo $this->formLabel($form->get('status')); ?>
+                    </div>
+                    <div class="col-8">
+                        <?php echo $this->formElement($form->get('status'));
+                              echo $this->formElementErrors($form->get('status'));?>
+                    </div>
+                    <div class="col-4">
+                        <?php echo $this->formLabel($form->get('image')); ?>
+                    </div>
+                    <div class="col-8">
+                        <?php
+                            echo $this->Layout()->SetMedia($form->get('image'),0,$this->old_image);
+                            echo $this->formElementErrors($form->get('image'));
+                        ?>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<?php $this->form()->closeTag(); ?>
+<?php echo $this->Layout()->MediaModal(); ?>

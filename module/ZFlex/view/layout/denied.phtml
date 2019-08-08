@@ -1,0 +1,316 @@
+<?php echo $this->headTitle("Không Đủ Quyền !") ?>
+<?php echo $this->doctype(); ?>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <?php echo $this->headTitle($this->translate('ZFlex'))->setSeparator(' - ')->setAutoEscape(false) ?>
+
+    <?php echo $this->headMeta()
+        ->appendName('viewport', 'width=device-width, initial-scale=1.0')
+        ->appendHttpEquiv('X-UA-Compatible', 'IE=edge')
+    ?>
+
+    <!-- Le styles -->
+    <?php echo $this->headLink(array('rel' => 'shortcut icon', 'type' => 'image/vnd.microsoft.icon', 'href' => $this->basePath() . '/img/favicon.ico'))
+                    ->prependStylesheet($this->basePath() . '/css/style.css')
+                    ->prependStylesheet('https://cdnjs.cloudflare.com/ajax/libs/morris.js/0.5.1/morris.css')
+                    ->prependStylesheet($this->basePath() . '/plugin/perfect-scrollbar/css/perfect-scrollbar.min.css')
+                    ->prependStylesheet($this->basePath() . '/plugin/icon/icomoon/styles.css')
+                    ->prependStylesheet($this->basePath() . '/plugin/font-awesome/css/font-awesome.min.css')
+                    ->prependStylesheet('https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css') 
+                    ->prependStylesheet('https://fonts.googleapis.com/css?family=Open+Sans:400,600,700,800') 
+    ?>
+</head>
+
+<body>
+    <!-- Navbar -->
+    <nav class="navbar fixed-top p-0">
+        <!-- Navbar Header -->
+        <div class="navbar-header align-self-stretch">
+            <a href="" class="navbar-brand text-center text-white d-block">
+                <img src="<?php echo $this->basePath('img/logo.png') ?>" class="img-big">
+                <img src="<?php echo $this->basePath('img/img-small.png') ?>" style="display: none;" class="img-small">
+            </a>
+        </div>
+        <!-- /Navbar Header -->
+        <!-- Navbar Left -->
+        <div class="navbar-left d-flex align-self-stretch align-items-center">
+            <!-- Sidebar Toggle -->
+            <ul class="nav navbar-nav">
+                <li class="sidebar-toggle">
+                    <a href="javascript:void(0)" class="mx-3"><i class="icon-three-bars"></i></a>
+                </li>
+            </ul>
+            <!-- /Sidebar Toggle -->
+            <!-- Form Search Navbar -->
+            <form class="form-inline mr-auto input-group ml-1">
+                <input type="" class="form-control form-search-navbar" name="" placeholder="Tìm kiếm ...">
+            </form>
+            <!-- /Form Search Navbar -->
+            <!-- Navbar Right Small-->
+            <ul class="navbar-nav d-flex flex-row navbar-_right align-items-center">
+                <!-- Dropdown Create New -->
+                <li class="nav-item py-4 mr-4 pl-4 hidden-xs hidden-sm dropdown">
+                    <a class="btn nav-link btn-info px-4 text-white btn-icon" data-toggle="dropdown" href="javascript:void(0)"><i class="icon-add-to-list"></i>Tạo mới</a>
+                    <div class="dropdown-menu">
+                        <span class="dropdown-header">Tạo mới ...</span>
+                        <a href="" class="dropdown-item">Game</a>
+                        <a href="" class="dropdown-item">Sản phẩm</a>
+                        <a href="" class="dropdown-item">Sự kiện</a>
+                        <a href="<?php echo $this->Path()->MemberAdd(); ?>" class="dropdown-item">Thành viên</a>
+                        <div class="dropdown-divider"></div>
+                        <a href="" class="dropdown-item dropdown-bold d-flex justify-content-between">Cài đặt <i class="icon-cogs align-self-center"></i></a>
+                    </div>
+                </li>
+                <!-- /Dropdown Create New -->
+                <!-- Dropdown Notifications -->
+                <li class="nav-item p-4 hidden-xs hidden-sm">
+                    <a class="nav-link" href="javascript:void(0)" data-toggle="dropdown"><i class="icon-earth" aria-hidden="true"></i><span class="badge badge-navbar badge-pill badge-secondary">9</span></a>
+                    <div class="dropdown-menu dropdown-card">
+                        <div class="card">
+                            <div class="card-header p-3 d-flex justify-content-between">
+                                Thông báo mới<span class="badge badge-navbar-dropdown badge-card badge-pill badge-secondary">9</span>
+                            </div>
+                            <ul class="list-unstyled p-3 text-white dropdown-list-group">
+                                <li>
+                                    <a class="media" href="#">
+                                        <span class="d-flex">
+                                            <i class="icon-bell3 todo-icon"></i>
+                                        </span>
+                                        <span class="media-body ml-2">
+                                            <p class="media-heading m-0">Lorem</p>
+                                            <p class="media-content m-0">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Vero eos debitis natus magnam vel id repudiandae voluptate explicabo officia quasi.</p>
+                                        </span>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="media" href="#">
+                                        <span class="d-flex">
+                                            <i class="icon-bell3 todo-icon"></i>
+                                        </span>
+                                        <span class="media-body ml-2">
+                                            <p class="media-heading m-0">Lorem</p>
+                                            <p class="media-content m-0">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Vero eos debitis natus magnam vel id repudiandae voluptate explicabo officia quasi.</p>
+                                        </span>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="media" href="#">
+                                        <span class="d-flex">
+                                            <i class="icon-bell3 todo-icon"></i>
+                                        </span>
+                                        <span class="media-body ml-2">
+                                            <p class="media-heading m-0">Lorem</p>
+                                            <p class="media-content m-0">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Vero eos debitis natus magnam vel id repudiandae voluptate explicabo officia quasi.</p>
+                                        </span>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="media" href="#">
+                                        <span class="d-flex">
+                                            <i class="icon-bell3 todo-icon"></i>
+                                        </span>
+                                        <span class="media-body ml-2">
+                                            <p class="media-heading m-0">Lorem</p>
+                                            <p class="media-content m-0">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Vero eos debitis natus magnam vel id repudiandae voluptate explicabo officia quasi.</p>
+                                        </span>
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </li>
+                <!-- /Dropdown Notifications -->
+                <!-- Dropdown Todo List -->
+                <li class="nav-item p-4 hidden-xs hidden-sm">
+                    <a class="nav-link" href="javascript:void(0)" data-toggle="dropdown"><i class="icon-calendar22" aria-hidden="true"></i><span class="badge badge-navbar badge-pill badge-secondary">9</span></a>
+                    <div class="dropdown-menu dropdown-card">
+                        <div class="card">
+                            <div class="card-header p-3 d-flex justify-content-between">
+                                Todo list<span class="badge badge-navbar-dropdown badge-card badge-pill badge-secondary">9</span>
+                            </div>
+                            <ul class="list-unstyled p-3 text-white dropdown-list-group">
+                                <li>
+                                    <a class="media" href="#">
+                                        <span class="d-flex">
+                                            <i class="icon-tux todo-icon"></i>
+                                        </span>
+                                        <span class="media-body ml-2">
+                                            <p class="media-heading m-0">Lorem ipsum dolor sit amet, consectetur adipisicing elit. In, deleniti.</p>
+                                            <p class="media-content m-0">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Vero eos debitis natus magnam vel id repudiandae voluptate explicabo officia quasi.</p>
+                                        </span>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="media" href="#">
+                                        <span class="d-flex">
+                                            <i class="icon-chrome todo-icon"></i>
+                                        </span>
+                                        <span class="media-body ml-2">
+                                            <p class="media-heading m-0">Lorem</p>
+                                            <p class="media-content m-0">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Vero eos debitis natus magnam vel id repudiandae voluptate explicabo officia quasi.</p>
+                                        </span>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="media" href="#">
+                                        <span class="d-flex">
+                                            <i class="icon-stackoverflow todo-icon"></i>
+                                        </span>
+                                        <span class="media-body ml-2">
+                                            <p class="media-heading m-0">Lorem</p>
+                                            <p class="media-content m-0">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Vero eos debitis natus magnam vel id repudiandae voluptate explicabo officia quasi.</p>
+                                        </span>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="media" href="#">
+                                        <span class="d-flex">
+                                            <i class="icon-check todo-icon"></i>
+                                        </span>
+                                        <span class="media-body ml-2">
+                                            <p class="media-heading m-0">Lorem ipsum dolor sit amet.</p>
+                                            <p class="media-content m-0">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Vero eos debitis natus magnam vel id repudiandae voluptate explicabo officia quasi.</p>
+                                        </span>
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </li>
+                <!-- /Dropdown Todo List -->
+                <!-- Dropdown User -->
+                <li class="nav-item mr-2 d-flex align-self-stretch align-items-center li-user">
+                    <a class="nav-link" href="javascript:void(0)" data-toggle="dropdown">
+                        <img src="<?php echo $this->Path()->PathAvatar("avatar.jpg") ?>" class="rounded-circle img-navbar">
+                    </a>
+                    <div class="dropdown-menu dropdown-card dropdown-card-user">
+                        <div class="card">
+                            <div class="card-header p-3 d-flex justify-content-between align-items-center">
+                                <p class="lead m-0">Vu Linh</p>
+                                <a href="" class="logout"><i class="icon-switch mr-2"></i>Đăng xuất</a>
+                            </div>
+                            <ul class="list-unstyled p-3 text-white dropdown-list-group">
+                                <li>
+                                    <a class="media" href="#">
+                                        <span class="d-flex">
+                                            <i class="icon-profile todo-icon"></i>
+                                        </span>
+                                        <span class="media-body ml-2">
+                                            <p class="media-heading m-0">Thông tin</p>
+                                            <p class="media-content m-0">Xem và chỉnh sửa thông tin</p>
+                                        </span>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="media" href="#">
+                                        <span class="d-flex">
+                                            <i class="icon-sphere todo-icon"></i>
+                                        </span>
+                                        <span class="media-body ml-2">
+                                            <p class="media-heading m-0">Z Flex</p>
+                                            <p class="media-content m-0">Trang chủ Z Shop</p>
+                                        </span>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="media" href="#">
+                                        <span class="d-flex">
+                                            <i class="icon-help todo-icon"></i>
+                                        </span>
+                                        <span class="media-body ml-2">
+                                            <p class="media-heading m-0">Giúp đỡ</p>
+                                            <p class="media-content m-0">Hướng dẫn sử dụng Z Flex</p>
+                                        </span>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="media" href="#">
+                                        <span class="d-flex">
+                                            <i class="icon-bug2 todo-icon"></i>
+                                        </span>
+                                        <span class="media-body ml-2">
+                                            <p class="media-heading m-0">Report Bug</p>
+                                            <p class="media-content m-0">Thông báo bug cho nhà phát triển</p>
+                                        </span>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="media" href="#">
+                                        <span class="d-flex">
+                                            <i class="icon-cash todo-icon"></i>
+                                        </span>
+                                        <span class="media-body ml-2">
+                                            <p class="media-heading m-0">Ủng hộ</p>
+                                            <p class="media-content m-0">Ủng hộ cho nhà phát triển</p>
+                                        </span>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="media" href="#">
+                                        <span class="d-flex">
+                                            <i class="icon-wrench2 todo-icon"></i>
+                                        </span>
+                                        <span class="media-body ml-2">
+                                            <p class="media-heading m-0">Cài đặt</p>
+                                            <p class="media-content m-0">Cấu hình cho website</p>
+                                        </span>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="media" href="javascript:void(0)">
+                                        <span class="d-flex">
+                                            <i class="icon-versions todo-icon"></i>
+                                        </span>
+                                        <span class="media-body ml-2">
+                                            <p class="media-heading m-0">Version</p>
+                                            <p class="media-content m-0">Version 1.0.0</p>
+                                        </span>
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </li>
+                <!-- /Dropdown User -->
+            </ul>
+            <!-- /Navbar Right Small-->
+        </div>
+        <!-- /Navbar Left -->
+    </nav>
+    <!-- /Navbar -->
+    <!-- Content Wrapper -->
+    <div class="content-wrapper">
+        <!-- Site Sidebar -->
+        <div class="site-sidebar">
+            <ul class="list-unstyled text-center side-menu text-white">
+                
+            </ul>
+        </div>
+        <!-- /Site Sidebar -->
+        <!-- Main Wrapper -->
+        <div class="main-wrapper">
+            <?php echo $this->content; ?>
+        </div>
+        <!-- /Main Wrapper -->
+    </div>
+    <!-- /Content Wrapper -->
+    <!-- Scripts -->
+    <?php echo $this->headScript()
+        ->prependFile($this->basePath() . '/js/app.js')
+        ->prependFile($this->basePath() . '/plugin/sortable/Sortable.min.js')
+        ->prependFile($this->basePath() . '/plugin/perfect-scrollbar/js/perfect-scrollbar.jquery.min.js')
+        ->prependFile($this->basePath() . '/plugin/nestable/jquery.nestable.js')
+        ->prependFile('https://cdnjs.cloudflare.com/ajax/libs/raphael/2.1.0/raphael-min.js')
+        ->prependFile('https://cdnjs.cloudflare.com/ajax/libs/morris.js/0.5.1/morris.min.js')
+        ->prependFile($this->basePath() . '/js/respond.min.js', 'text/javascript', array('conditional' => 'lt IE 9',))
+        ->prependFile($this->basePath() . '/js/html5shiv.js',   'text/javascript', array('conditional' => 'lt IE 9',))
+        ->prependFile("https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/js/bootstrap.min.js")
+        ->prependFile('https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js')
+        ->prependFile('https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js')
+    ; ?>
+    <?php echo $this->inlineScript() ?>
+</body>
+
+</html>

@@ -1,0 +1,160 @@
+<?php echo $this->headTitle("Xử Lý") ?>
+<?php 
+$url_ajax_rented = $this->url('ajax',array('action' => 'load-handing-rented'));
+$url_ajax_show_report_rent = $this->url('ajax',array('action' => 'load-show-report-rent'));
+ $this->inlineScript()->captureStart();
+ 
+echo <<<JS
+    $(".reload-rent").click(function(){
+    var id = strip_tags($(this).data('id'));
+    var _this = this;
+    var new_password = strip_tags($(".input_pw_"+id).val());
+    $.ajax({
+      type: 'POST',
+      url: "$url_ajax_rented",
+      beforeSend: function() {
+          $(".table-rent-list").addClass("active");
+      },
+      data:{id: id,password: new_password,status: 1},
+      success: function(data)
+      {
+        var result = data.result;
+        $(_this).parents("tr").fadeOut('fast');
+      },
+      complete: function() {
+        $(".table-rent-list").removeClass("active");
+      },
+      dataType: 'json'
+    });
+  });
+
+  $(".reload-rent-report").click(function(){
+    var id = strip_tags($(this).data('id'));
+    var _this = this;
+    $.ajax({
+      type: 'POST',
+      url: "$url_ajax_show_report_rent",
+      beforeSend: function() {
+          $(".table-report-list").addClass("active");
+      },
+      data:{id: id},
+      success: function(data)
+      {
+        var result = data.result;
+        if(result == true){
+          $(_this).parents("tr").fadeOut('fast');
+        }
+        
+      },
+      complete: function() {
+        $(".table-report-list").removeClass("active");
+      },
+      dataType: 'json'
+    });
+  });
+
+  $(".reload-rent-block").click(function(){
+    var id = strip_tags($(this).data('id'));
+    var _this = this;
+    var new_password = strip_tags($(".input_pw_"+id).val());
+    $.ajax({
+      type: 'POST',
+      url: "$url_ajax_rented",
+      beforeSend: function() {
+          $(".table-rent-list").addClass("active");
+      },
+      data:{id: id,password: new_password,status: 3},
+      success: function(data)
+      {
+        var result = data.result;
+        $(_this).parents("tr").fadeOut('fast');
+      },
+      complete: function() {
+        $(".table-rent-list").removeClass("active");
+      },
+      dataType: 'json'
+    });
+  });
+JS;
+$this->inlineScript()->captureEnd(); ?>
+<article class="ui container wrapper">    
+    <?php echo $this->partial('partial/nav_shop'); ?>
+    <h3 class="ui header">
+    	<?php echo count($this->reup); ?> ACC ĐANG CẦN ĐỔI PASS ĐỂ TIẾP TỤC CHO THUÊ
+	</h3>
+	<div class="dimmable">
+	    <div class="ui inverted dimmer table-rent-list">
+	        <div class="ui loader"></div>
+	    </div>
+		<table class="ui basic celled table" style="border-radius: 0px;">
+		  <thead>
+		    <tr>
+		      <th>Hết hạn lúc</th>
+		      <th>Tên đăng nhập</th>
+		      <th>Mật khẩu cũ</th>
+		      <th>Mật khẩu mới</th>
+		      <th>Game</th>
+		      <th></th>
+		      <th></th>
+		    </tr>
+		  </thead>
+		  <tbody class="tbody-rent-list">
+		  	<?php if(count($this->reup) > 0): ?>
+		  	<?php foreach($this->reup as $k => $v): ?>
+		  	<tr>
+		  		<td><?php echo $v['time_end']; ?></td>
+		  		<td><?php echo $v['username']; ?></td>
+		  		<td><?php echo $v['password'] ?></td>
+		  		<td><input type="hidden" name="new_password" class="input_pw_<?php echo $v['id']; ?>" value="<?php echo $v['new_password']; ?>"><span style="cursor: pointer;font-weight: 500;" onclick="copyText2('<?php echo $v["new_password"]; ?>')"><i class="icon copy"></i><?php echo $v['new_password']; ?></span></td></td>
+		  		<td><?php echo $v['game']; ?></td>
+		  		<td data-tooltip="Đã đổi pass, tiếp tục cho thuê"><i data-id="<?php echo $v['id']; ?>" class="ui center aligned icon refresh w-100 reload-rent" style="cursor: pointer;" ></i></td>
+		  		<td  data-tooltip="Đã đổi pass, ngưng hoạt động"><i data-id="<?php echo $v['id']; ?>" class="ui center aligned icon hand paper w-100 reload-rent-block" style="cursor: pointer;"></i></td>
+		  	</tr>
+			<?php endforeach; 
+			else:?>
+			<tr>
+				<td colspan="7" style="text-align: center;">Không có dữ liệu !</td>
+			</tr>
+			<?php endif; ?>
+		  </tbody>
+		</table>
+	</div>
+	
+
+	<h3 class="ui header">
+    	<?php echo count($this->report); ?> BÁO LỖI TỪ KHÁCH HÀNG
+	</h3>
+	<div class="dimmable">
+	    <div class="ui inverted dimmer table-report-list">
+	        <div class="ui loader"></div>
+	    </div>
+		<table class="ui basic celled table" style="border-radius: 0px;">
+		  <thead>
+		    <tr>
+		      <th>Thời gian báo lỗi</th>
+		      <th>Tài khoản</th>
+		      <th>Game</th>
+		      <th width="40%">Nội dung</th>
+		      <th></th>
+		    </tr>
+		  </thead>
+		  <tbody class="tbody-rent-list">
+		  	<?php if(count($this->report) > 0): ?>
+		  	<?php foreach($this->report as $k => $v): ?>
+		  	<tr>
+		  		<td><?php echo $v['time']; ?></td>
+		  		<td><?php echo $v['username']; ?></td>
+		  		<td><?php echo $v['game']; ?></td>
+		  		<td><?php echo $v['msg'] ?></td>
+		  		<td  data-tooltip="Đã xem,đã xử lý"><i data-id="<?php echo $v['id']; ?>" class="ui center aligned icon checkmark box w-100 reload-rent-report" style="cursor: pointer;"></i></td>
+		  	</tr>
+			<?php endforeach; ?>
+			<?php else: ?>
+			<tr>
+				<td colspan="5" style="text-align: center;">Không có báo lỗi nào !</td>
+			</tr>
+			<?php endif; ?>
+		  </tbody>
+		</table>
+	</div>
+</article>

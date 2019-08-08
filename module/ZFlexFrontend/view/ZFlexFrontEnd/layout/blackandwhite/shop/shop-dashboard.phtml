@@ -1,0 +1,182 @@
+<?php echo $this->headTitle("Dashboard") ?>
+<?php 
+$url_ajax = $this->url('ajax',array('action' => 'load-send-comment'));
+$this->inlineScript()->captureStart();
+ 
+echo <<<JS
+  $(".comments").on('click','.btn-send-comment',function(){
+    var _this = this;
+    var val = strip_tags($(this).prev().find("textarea").val());
+    var rep_id = strip_tags($(this).data('rep-id'));
+    if(rep_id == 0){
+      var rating = $(".rating").rating('get rating');
+    }else{
+      var rating = 0;
+    }
+    $.ajax({
+      type: 'POST',
+      url: "$url_ajax",
+      beforeSend: function() {
+          $(".loader-comment").addClass("active");
+      },
+      data: { rep_id: rep_id,val: val,shop_id: shop_id,rating: rating},
+      success: function(data)
+      {
+        var result = data.result;
+        if(result != false && result != 'cannot' && result != 'commented' && result != '' && result != 'not_login'){
+          if(rep_id == 0){
+            $("#list_comments").prepend(htmlComment(result,rep_id));
+          }else{
+            $(".content[data-rep-id="+rep_id+"]").append(htmlComment(result,rep_id));
+          }
+          if($("#empty_comments")[0]){
+            $("#empty_comments").remove();
+          }
+          
+        }else if(result == 'cannot'){
+          alert("Bạn không thể đánh giá shop của mình");
+        }else if(result == 'commented'){
+          alert("Bạn chỉ được đánh giá shop một lần !");
+        }else if(result == false){
+          alert("Bạn chưa từng thuê acc ở shop này nên không thể đánh giá !");
+        }else if(result == 'not_login'){
+          alert("Bạn chưa đăng nhập !");
+        }
+      },
+      dataType: 'json',
+      complete: function(){
+        $(".loader-comment").removeClass("active");
+        $(_this).prev().find("textarea").val('');
+      }
+    });
+  });
+JS;
+$this->inlineScript()->captureEnd(); ?>
+
+<article class="ui container wrapper">    
+    <?php echo $this->partial('partial/nav_shop'); ?>
+    <div class="ui three column doubling stackable grid segment widget" style="box-shadow: none;border-radius: 0px;">
+        <div class="column">
+        	<h3 class="ui header center aligned">SỐ TIỀN ĐANG CÓ : <?php echo number_format($this->FrontendData()->CustomerInfo()->getMoney()); ?> VNĐ</h3>
+        </div>
+        <div class="column">
+        	<h3 class="ui header center aligned">SỐ LƯỢNG ACC : <?php echo count($this->FrontendData()->CustomerInfo()->getRent()); ?></h3>
+        </div>
+        <div class="column">
+        	<h3 class="ui header center aligned">SỐ LƯỢNG GIAO DỊCH: <?php echo count($this->history_rents); ?></h3>
+        </div>
+    </div>
+	<div class="ui column doubling stackable grid segment" style="box-shadow: none;border-radius: 0px;">
+        <div class="ten wide column" style="border-right: 1px solid rgba(34,36,38,.15);">
+        	<h3 class="ui header left aligned">NHỮNG ĐÁNH GIÁ CỦA KHÁCH HÀNG</h3>
+        	<div class="ui comments">
+    	<div class="ui inverted dimmer loader-comment">
+            <div class="ui loader"></div>
+          </div>
+        <div id="list_comments">
+        	
+        	<?php $avg = 0;
+        	$stt = 0;
+        	?>
+        	<?php foreach($this->comment_shop as $k => $v): ?>
+        	<?php 
+        	if($v->getScore() != 0):
+        	$avg += $v->getScore();$stt++; 
+        	endif;
+        	if($v->getRepComment() == 0):
+        	?>
+        	<div class="comment">
+		        <a class="avatar">
+		          <img src="//graph.facebook.com/<?php echo $v->getCustomer()->getFbId(); ?>/picture">
+		        </a>
+		        <div class="content" data-rep-id="<?php echo $v->getId(); ?>">
+		          <a class="author"><?php echo $v->getCustomer()->getFbName(); ?></a>
+		          <div class="metadata">
+		            <span class="date"><?php echo \Carbon\Carbon::parse($v->getTimeCreated())->format('H:i:s d/m/Y'); ?></span>| <span><?php echo $v->getScore(); ?><i class="icon star" style="color:#ffe623;text-shadow:0 -1px 0 #ddc507,-1px 0 0 #ddc507,0 1px 0 #ddc507,1px 0 0 #ddc507!important"></i></span>
+		          </div>
+		          <div class="text">
+		            <?php echo $v->getContent(); ?>
+		          </div>
+		          <div class="actions">
+		            <a class="reply reply-click" data-rep-id="<?php echo $v->getId(); ?>">Reply</a>
+		          </div>
+		          	<form class="ui reply form form-reply">
+						<div class="field">
+						  <textarea data-rep-id="0"></textarea>
+						</div>
+						<div class="ui small submit icon button btn-send-comment" data-rep-id="<?php echo $v->getId(); ?>">TRẢ LỜI
+						</div>
+					</form>
+					<?php $frontend = $this->FrontendData(); ?>
+					<?php echo rep_comment($v->getId(),$frontend); ?>
+		        </div>
+  			</div>
+  			
+  			<?php 
+  			endif;
+  			endforeach; ?>
+  			<?php function rep_comment($id,$frontend){
+  				$xhtml = '';
+  				$rep_comment = $frontend->getRepComment($id);
+  				if(!empty($rep_comment)): 
+  					
+  					foreach($rep_comment as $k => $val):
+  					$xhtml .= '<div class="comment">';
+					    $xhtml .= '<a class="avatar">';
+					      $xhtml .= '<img src="//graph.facebook.com/'.$val->getCustomer()->getFbId().'/picture">';
+					    $xhtml .= '</a>';
+					    $xhtml .= '<div class="content" data-rep-id="'.$val->getId().'">';
+					      $xhtml .= '<a class="author">'.$val->getCustomer()->getFbName().'</a>';
+					      $xhtml .= '<div class="metadata">';
+					        $xhtml .= '<span class="date">'.\Carbon\Carbon::parse($val->getTimeCreated())->format('H:i:s d/m/Y').'</span>';
+					      $xhtml .= '</div>';
+					      $xhtml .= '<div class="text">';
+					       $xhtml .= $val->getContent(); 
+					      $xhtml .= '</div>';
+					      $xhtml .= '<div class="actions">';
+					        $xhtml .= '<a class="reply reply-click" data-rep-id="'.$val->getId().'">Reply</a>';
+					      $xhtml .= '</div>';
+					      $xhtml .= '<form class="ui reply form form-reply">';
+								$xhtml .= '<div class="field">';
+								  $xhtml .= '<textarea data-rep-id="'.$val->getId().'"></textarea>';
+								$xhtml .= '</div>';
+								$xhtml .= '<div class="ui small submit icon button btn-send-comment" data-rep-id="'.$val->getId().'">TRẢ LỜI';
+								$xhtml .= '</div>';
+							$xhtml .= '</form>';
+							$xhtml .= rep_comment($val->getId(),$frontend);
+					    $xhtml .= '</div>';
+				  	$xhtml .= '</div>	';
+  					endforeach;
+  					return $xhtml;
+  				endif;
+  			} ?>
+        </div>
+        <?php if(count($this->comment_shop) == 0): ?>
+    	<p id="empty_comments">Chưa có đánh giá nào về shop này</p>
+    	<?php endif; ?>
+	</div>
+        </div>
+        <div class="six wide column">
+        	<h3 class="ui header left aligned">THÀNH TÍCH WEBSITE CỦA BẠN</h3>
+        	<p>SỐ LƯỢNG ĐÁNH GIÁ : <?php echo $this->FrontendData()->countRating(); ?></p>
+          <?php if(!empty($this->FrontendData()->sumRating()) && !empty($this->FrontendData()->countRating())): ?>
+        	<p>ĐÁNH GIÁ : <?php echo $this->FrontendData()->sumRating() / $this->FrontendData()->countRating(); ?> SAO</p>
+          <?php else: ?>
+          <p>ĐÁNH GIÁ : CHƯA CÓ ĐÁNH GIÁ NÀO </p>
+          <?php endif; ?>
+        	<div style="position: relative;">
+        		<img src="<?php echo $this->FrontendPath()->BannerShop($this->shop->getBanner()); ?>" class="ui image fluid">
+        		<div id="shop_info" data-shop-id="<?php echo $this->shop->getId(); ?>" style="position: absolute;
+    bottom: 15px;
+    color: white !important;
+    left: 15px;
+    background: #00000094;
+    padding: 15px;">
+        			<p><a href="<?php echo $this->url('shop_info',array('id' => $this->shop->getId())); ?>" target="_blank" style="color:white;"><?php echo $this->shop->getShopName(); ?></a></p>
+        		</div>
+        	</div>
+        	
+        </div>
+    </div>
+
+</article>
