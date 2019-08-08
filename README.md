@@ -8,8 +8,21 @@ Source code thuê tài khoản chơi game
 
 Hình ảnh
 ------------
+**FRONTEND**
 
-![Alt text](https://imgur.com/ytkZWPU)
+
+
+![ScreenShot](https://i.imgur.com/x7WoLKK.jpg)
+
+
+
+
+**ADMIN**
+
+
+
+![ScreenShot](https://i.imgur.com/ytkZWPU.png)
+
 
 Cách cài đặt
 ------------
