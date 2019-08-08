@@ -7,6 +7,4 @@ nbproject
 .project
 .settings
 composer.lock
-vendor/
-!vendor/README.md
-!vendor/ZF2/
+.sass-cache
