@@ -37,6 +37,10 @@ Admin
  - username: `admin`
  - password: `123123`
  
+Yêu cầu
+------------
+ php >= 5.6
+ 
  Tác giả
  ------------
  Facebook: https://www.facebook.com/vulinh007
