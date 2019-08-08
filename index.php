@@ -1,8 +1,4 @@
 <?php
-/**
- * This makes our life easier when dealing with paths. Everything is relative
- * to the application root now.
- */
 // Code được viết bởi : https://www.facebook.com/vulinh007;
 chdir(__DIR__);
 define('ZFLEX_DB_PREFIX','zflex_');
