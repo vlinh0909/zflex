@@ -1,3 +1,5 @@
+var zflex_url = 'http://localhost/zflex/';
+
 function isNumber(n) {
   return !isNaN(parseFloat(n)) && isFinite(n);
 }
@@ -249,136 +251,6 @@ var htmlRentList = function(value){
       return xhtml;
 }
 
-/*$(".search-rent").keypress(function (e) {
- var key = e.which;
- var val = $(this).val();
- if(key == 13)  // the enter key code
-  {
-    $.ajax({
-      type: 'POST',
-      url: "http://localhost/zflex/ajax/load-rent-list-search",
-      beforeSend: function() {
-          $(".table-rent-list").addClass("active");
-      },
-      data: { search: val,status_search:status_search},
-      success: function(data)
-      {
-        var result = data.result;
-        $(".tbody-rent-list > tr").remove();
-        $.each(result, function(i, value) {
-          $(".tbody-rent-list").append(htmlRentList(value));
-        });
-      },
-      complete: function() {
-        $(".table-rent-list").removeClass("active");
-      },
-      dataType: 'json'
-    });
-  }
-});*/
-
-
-/*$(".reload-rent").click(function(){
-  var id = $(this).data('id');
-  var _this = this;
-  var new_password = $(".input_pw_"+id).val();
-  $.ajax({
-    type: 'POST',
-    url: "http://localhost/zflex/ajax/load-handing-rented",
-    beforeSend: function() {
-        $(".table-rent-list").addClass("active");
-    },
-    data:{id: id,password: new_password,status: 1},
-    success: function(data)
-    {
-      var result = data.result;
-      console.log(result);
-      $(_this).parents("tr").fadeOut('fast');
-    },
-    complete: function() {
-      $(".table-rent-list").removeClass("active");
-    },
-    dataType: 'json'
-  });
-});
-
-$(".reload-rent-report").click(function(){
-  var id = $(this).data('id');
-  var _this = this;
-  $.ajax({
-    type: 'POST',
-    url: "http://localhost/zflex/ajax/load-show-report-rent",
-    beforeSend: function() {
-        $(".table-report-list").addClass("active");
-    },
-    data:{id: id},
-    success: function(data)
-    {
-      var result = data.result;
-      console.log(result);
-      if(result == true){
-        $(_this).parents("tr").fadeOut('fast');
-      }
-      
-    },
-    complete: function() {
-      $(".table-report-list").removeClass("active");
-    },
-    dataType: 'json'
-  });
-});
-
-$(".reload-rent-block").click(function(){
-  var id = $(this).data('id');
-  var _this = this;
-  var new_password = $(".input_pw_"+id).val();
-  $.ajax({
-    type: 'POST',
-    url: "http://localhost/zflex/ajax/load-handing-rented",
-    beforeSend: function() {
-        $(".table-rent-list").addClass("active");
-    },
-    data:{id: id,password: new_password,status: 3},
-    success: function(data)
-    {
-      var result = data.result;
-      console.log(result);
-      $(_this).parents("tr").fadeOut('fast');
-    },
-    complete: function() {
-      $(".table-rent-list").removeClass("active");
-    },
-    dataType: 'json'
-  });
-});*/
-
-/*$(".filter-rent-list .btn-filter-2").click(function(){
-  $(".filter-rent-list .btn-filter-2").removeClass("active");
-  $(this).addClass("active");
-  status_search = $(this).data('status');
-  $.ajax({
-    type: 'POST',
-    url: "http://localhost/zflex/ajax/load-rent-list",
-    beforeSend: function() {
-        $(".table-rent-list").addClass("active");
-    },
-    data: { status: status_search},
-    success: function(data)
-    {
-      var result = data.result;
-      console.log(result);
-      $(".tbody-rent-list > tr").remove();
-      $.each(result, function(i, value) {
-        $(".tbody-rent-list").append(htmlRentList(value));
-      });
-    },
-    complete: function() {
-      $(".table-rent-list").removeClass("active");
-    },
-    dataType: 'json'
-  });
-});*/
-
 $(".filter-shop .btn-filter").click(function(){
   location.href = $(this).attr('href');
 });
@@ -397,160 +269,6 @@ $("#toggleSidebar").click(function(){
   .modal('show')
 ;
 });
-
-// $(".filter-left .btn-filter-rent").click(function(){
-//   page = 1;
-//   $(".filter-left .btn-filter-rent").removeClass("active");
-//   $(this).addClass("active");
-//   var game = $(this).data('game');
-//   current_game = game;
-//   $.ajax({
-//     type: 'POST',
-//     url: "http://localhost/zflex/ajax/load-rent",
-//     beforeSend: function() {
-//         $(".loader-rent").addClass("active");
-//     },
-//     data: { game: game,ready : is_ready,page:page,customer_id: customer_id},
-//     success: function(data)
-//     {
-//       var result = data.result;
-//       console.log(result);
-//       $("#count_sansang").text(data.count.rent_sansang);
-//       $("#count_dathue").text(data.count.rent_dathue);
-//       $(".div-rent > div:not(.loader-rent)").remove();
-//       if(is_ready == 1)
-//       {
-//         $.each(result, function(i, value) {
-//           $(".div-rent").append(htmlAjaxRent(value));
-//         });
-//       }else{
-//         $.each(result, function(i, value) {
-//           $(".div-rent").append(htmlAjaxRent2(value));
-//         });
-//       }
-//     },
-//     complete: function() {
-//         $(".loader-rent").removeClass("active");
-//       $('.special.cards .image').dimmer({
-//       on: 'hover'
-//       });
-//       $('.ui.dropdown').dropdown();
-//       if(is_ready == 2)
-//       {
-//         rent_time_format();
-//       }
-//     },
-//     dataType: 'json'
-//   });
-// });
-
-/*$(".btn-more").click(function(){
-  // numer_page = parseInt($(this).data('pagination'));
-  page = page + 1;
-  // alert(page);
-
-    $.ajax({
-      type: 'POST',
-      url: "http://localhost/zflex/ajax/load-rent",
-      beforeSend: function() {
-          $(".loader-rent").addClass("active");
-      },
-      data: { game: current_game,ready : is_ready,page:page,customer_id: customer_id},
-      success: function(data)
-      {
-        var flag = false;
-        var result = data.result;
-        console.log(result);
-        if(result.length == 0)
-        {
-          flag = true;
-        }
-        
-        if(is_ready == 1)
-        {
-          $.each(result, function(i, value) {
-          if($(".btn-rent[data-id="+value.id+"]").length == 1)
-          {
-            flag = true;
-          }else{
-            $(".div-rent").append(htmlAjaxRent(value));
-          }
-        });
-        }else{
-          $.each(result, function(i, value) {
-          if($(".btn-rent[data-id="+value.id+"]").length == 1)
-          {
-            flag = true;
-          }else{
-            $(".div-rent").append(htmlAjaxRent2(value));
-          }
-        });
-        }
-        if(flag == true)
-        {
-          swal("Thông báo !", "Đã load hết tài khoản !", "warning");
-        }
-      },
-      complete: function() {
-        $(".loader-rent").removeClass("active");
-        $('.special.cards .image').dimmer({
-        on: 'hover'
-        });
-        $('.ui.dropdown').dropdown();
-        if(is_ready == 2)
-        {
-          rent_time_format();
-        }
-      },
-      dataType: 'json'
-    });
-});*/
-
-/*$(".filter-right .btn-filter").click(function(){
-  page = 1;
-  $(".filter-right .btn-filter").removeClass("active");
-  $(this).addClass("active");
-  var ready = $(this).data('ready');
-  is_ready = ready;
-  $.ajax({
-    type: 'POST',
-    url: "http://localhost/zflex/ajax/load-rent",
-    beforeSend: function() {
-        $(".loader-rent").addClass("active");
-    },
-    data: { game: current_game,ready : ready,page:page,customer_id : customer_id},
-    success: function(data)
-    {
-      var result = data.result;
-      $("#count_sansang").text(data.count.rent_sansang);
-      $("#count_dathue").text(data.count.rent_dathue);
-      $(".div-rent > div:not(.loader-rent)").remove();
-      if(is_ready == 1)
-      {
-        $.each(result, function(i, value) {
-          $(".div-rent").append(htmlAjaxRent(value));
-        });
-      }else{
-        $.each(result, function(i, value) {
-          $(".div-rent").append(htmlAjaxRent2(value))
-        });
-      }
-    },
-    complete: function() {
-      $(".loader-rent").removeClass("active");
-      $('.special.cards .image').dimmer({
-      on: 'hover'
-      });
-      $('.ui.dropdown').dropdown();
-      if(is_ready == 2)
-      {
-        rent_time_format();
-      }
-      
-    },
-    dataType: 'json'
-  });
-});*/
 
 function rent_time_format()
 {
@@ -630,46 +348,6 @@ function move_center(div){
  }﻿
 $('#popupInfo').css('width',($(window).width() / 5));
 move_center('#popupCenter');
-// $("#popupBg").hide();
-/*htmlSuccess = function(title = 'THUÊ TÀI KHOẢN',value = 'THUÊ THÀNH CÔNG',is_button = 1)
-{
-  var xhtml ='';
-  xhtml += '<div id="popupR">';
-  xhtml += '<h4 class="text-center" >'+title+'</h4>';
-  xhtml += '<div class="hr"></div>';
-  xhtml += '<h3 class="text-center"><strong>'+value+'</strong></h3>';
-  if(is_button == 1)
-  {
-    xhtml += '<div class="text-center w-100">';
-      xhtml += '<a href="http://localhost/zflex/index.html" class="ui button large black mb-15">VÀO LỊCH SỬ GIAO DỊCH</a>';
-    xhtml += '</div>';
-  }else if(is_button == 'login'){
-    xhtml += '<div class="text-center w-100">';
-      xhtml += '<a href="/zflex/fb_login.html" class="ui button large black mb-15">ĐĂNG NHẬP</a>';
-    xhtml += '</div>';
-  }else if(is_button == false)
-  {
-    xhtml += '<div class="text-center w-100">';
-      xhtml += '<button id="close" class="ui button fluid black mb-15">ĐÓNG</button>';
-    xhtml += '</div>';
-  }
-  xhtml += '</div>';
-  return xhtml;
-}
-
-htmlError = function(data = 'THUÊ TÀI KHOẢN')
-{
-  var xhtml ='';
-  xhtml += '<div id="popupR">';
-  xhtml += '<h4 class="text-center" >'+data+'</h4>';
-  xhtml += '<div class="hr"></div>';
-  xhtml += '<h3 class="text-center"><strong>KHÔNG ĐỦ TIỀN</strong></h3>';
-  xhtml += '<div class="text-center w-100">';
-    xhtml += '<a href="http://localhost/zflex/card.html" class="ui button large black mb-15">NẠP TIỀN</a>';
-  xhtml += '</div>';
-  xhtml += '</div>';
-  return xhtml;
-}*/
 
 var htmlRent = function(data)
 {
@@ -714,7 +392,7 @@ var htmlLoad = function()
   xhtml += '<div id="popupR">';
   xhtml += '<h4 class="text-center" >THUÊ TÀI KHOẢN</h4>';
           xhtml += '<div class="hr"></div>';
-          xhtml += '<img src="http://localhost/zflex/public/blackandwhite/img/Blocks.gif" width="100%">';
+          xhtml += '<img src="'+zflex_url+'public/blackandwhite/img/Blocks.gif" width="100%">';
   xhtml += '</div>';
   return xhtml;
 }
@@ -781,33 +459,6 @@ $('.rating')
   })
 ;
 
-
-/*$("#popupInfo").on('click','#btn-giahan',function(){
-  var id = $(this).data('id');
-  var time = $("#sl_rent_time").val();
-  $.ajax({
-    type: 'POST',
-    url: "http://localhost/zflex/ajax/load-handing-gia-han",
-    beforeSend: function() {
-        $("#popupInfo").html(htmlLoad());
-    },
-    data: { id: id,time: time},
-    success: function(data)
-    {
-      var result = data.result;
-      
-      if(result == 0)
-      {
-        $("#popupInfo").html(htmlError('GIA HẠN TÀI KHOẢN'));
-      }else if(result == 1){
-        $("#popupInfo").html(htmlSuccess('GIA HẠN TÀI KHOẢN','GIA HẠN TÀI KHOẢN THÀNH CÔNG !'));
-      }
-      move_center('#popupCenter');
-    },
-    dataType: 'json'
-  });
-});*/
-
 function htmlComment(value,rep_id){
   var xhtml = '';
   xhtml +='<div class="comment">';
@@ -846,102 +497,6 @@ $("#list_comments").on('click','.reply-click',function(){
   $(this).parent(".actions").next(".form-reply").slideToggle();
 });
 
-/*$(".comments").on('click','.btn-send-comment',function(){
-  var _this = this;
-  var val = $(this).prev().find("textarea").val();
-  var rep_id = $(this).data('rep-id');
-  if(rep_id == 0){
-    var rating = $(".rating").rating('get rating');
-  }else{
-    var rating = 0;
-  }
-  $.ajax({
-    type: 'POST',
-    url: "http://localhost/zflex/ajax/load-send-comment",
-    beforeSend: function() {
-        $(".loader-comment").addClass("active");
-    },
-    data: { rep_id: rep_id,val: val,shop_id: shop_id,rating: rating},
-    success: function(data)
-    {
-      var result = data.result;
-      if(result != false && result != 'cannot' && result != 'commented' && result != '' && result != 'not_login'){
-        if(rep_id == 0){
-          $("#list_comments").prepend(htmlComment(result,rep_id));
-        }else{
-          $(".content[data-rep-id="+rep_id+"]").append(htmlComment(result,rep_id));
-        }
-        if($("#empty_comments")[0]){
-          $("#empty_comments").remove();
-        }
-        
-      }else if(result == 'cannot'){
-        alert("Bạn không thể đánh giá shop của mình");
-      }else if(result == 'commented'){
-        alert("Bạn chỉ được đánh giá shop một lần !");
-      }else if(result == false){
-        alert("Bạn chưa từng thuê acc ở shop này nên không thể đánh giá !");
-      }else if(result == 'not_login'){
-        alert("Bạn chưa đăng nhập !");
-      }
-    },
-    dataType: 'json',
-    complete: function(){
-      $(".loader-comment").removeClass("active");
-      $(_this).prev().find("textarea").val('');
-    }
-  });
-});*/
-
-/*$(".btn-giahan").click(function(){
-  var id = $(this).data('id');
-  $.ajax({
-    type: 'POST',
-    url: "http://localhost/zflex/ajax/load-gia-han",
-    data: { id: id},
-    success: function(data)
-    {
-      var result = data.result;
-      
-      if(result == 0)
-      {
-        $("#popupInfo").html(htmlError('GIA HẠN TÀI KHOẢN'));
-      }else if(result == 'not'){
-        $("#popupInfo").html(htmlSuccess('GIA HẠN TÀI KHOẢN','TÀI KHOẢN NÀY KHÔNG CHO PHÉP GIA HẠN !'));
-      }
-      else if(result == 'error')
-      {
-        $("#popupInfo").html(htmlSuccess('GIA HẠN TÀI KHOẢN','BẠN KHÔNG THỂ GIA HẠN TÀI KHOẢN NÀY !'));
-      }
-      else{
-        value = {username: result.username,url_shop: result.url_shop,shop: result.shop,img: result.img,value_options: result.value_options,id: id};
-        $("#popupInfo").html(htmlGiaHan(value));
-        
-      }
-      move_center('#popupCenter');
-    },
-    dataType: 'json'
-  });
-  
-  $("#popupBg").show();
-});*/
-
-/*$(".div-rent").on('click','.btn-rent',function(){
-  var id = $(this).data('id');
-  var value = $(this).parents('.extra.content').prev('.content').find('select').val();
-  var price = $(this).parents('.extra.content').prev('.content').find('.money_'+value).val();
-  var img = $(this).parents('.extra.content').prevAll('.image').find('img').attr('src');
-  $.post("http://localhost/zflex/ajax/load-shop", { id: id})
-  .done(function(data) {
-    var result = data.result;
-    var data = {id: id,game: result.game,time: value,price: price,shop: result.shop,url_shop: result.url_shop,img: img};
-    $("#popupInfo").html(htmlRent(data));
-    move_center('#popupCenter');
-  });
-
-  $("#popupBg").show();
-});*/
-
 $("#popupCenter").on('click','.icon.close',function(){
   $("#popupR").remove();
   $("#popupBg").hide();
@@ -951,7 +506,7 @@ function rent_account(id,time)
 {
   $.ajax({
     type: 'POST',
-    url: "http://localhost/zflex/ajax/load-rent-account",
+    url: ""+zflex_url+"ajax/load-rent-account",
     beforeSend: function() {
         $("#popupInfo").html(htmlLoad());
     },
@@ -977,36 +532,6 @@ $("#popupInfo").on('click','#close',function(){
   $("#popupR").remove();
   $("#popupBg").hide();
 });
-
-
-/*$("#popupInfo").on('click','.btn-send-report',function(){
-  var id = $(this).data('id');
-  var msg = $("[name=msg_report_"+id+"]").val();
-  if(msg != ''){
-    $.ajax({
-      type: 'POST',
-      url: "http://localhost/zflex/ajax/load-report-rent",
-      beforeSend: function() {
-          $("#popupInfo").html(htmlLoad());
-      },
-      data:{id: id,msg: msg},
-      success: function(data)
-      {
-        var result = data.result;
-        console.log(result);
-        if(result == true){
-          $("#popupInfo").html(htmlSuccess("THÔNG BÁO !","GỬI BÁO LỖI THÀNH CÔNG !"));
-        }else if(result == 'error'){
-          $("#popupInfo").html(htmlSuccess("LỖI !","BẠN KHÔNG THỂ BÁO LỖI TÀI KHOẢN NÀY !"));
-        }
-        
-      },
-      dataType: 'json'
-    });
-  }
-});*/
-
-
 
 function copyText(id) {
   var copyText = document.getElementById(id);
@@ -1128,7 +653,7 @@ $(".btn-buy").click(function(){
     function(){
       $.ajax({
         type:"POST",
-        url:"http://localhost/zflex/handing/buy",
+        url:""+zflex_url+"handing/buy",
         data:{id: id},
         dataType: 'json',
         success: function(data){
@@ -1168,73 +693,6 @@ $("#open-report").click(function(){
   $("#popupBg").show();
   move_center("#popupCenter");
 });
-/*
-$("#popupInfo").on('click','#btn-report-shop',function(){
-  var val = escapeHtml($("#message-report").val());
-  if(val != '')
-  {
-    $.ajax({
-      type: 'POST',
-      url: "http://localhost/zflex/ajax/load-send-report",
-      beforeSend: function() {
-          $("#popupInfo").html(htmlLoad());
-      },
-      data: { shop_id: shop_id,val: val},
-      success: function(data)
-      {
-        var result = data.result;
-        
-        if(result == 'not_login')
-        {
-          $("#popupInfo").html(htmlSuccess('TỐ CÁO SHOP','BẠN CHƯA ĐĂNG NHẬP !','login'));
-        }else if(result == false){
-          $("#popupInfo").html(htmlSuccess('TỐ CÁO SHOP','BẠN CHƯA TỪNG THUÊ ACC Ở SHOP NÀY NÊN KHÔNG THỂ TỐ CÁO !',false));
-        }else if(result == true){
-          $("#popupInfo").html(htmlSuccess('TỐ CÁO SHOP','TỐ CÁO THÀNH CÔNG ! LÝ DO : '+val,false));
-        }else if(result == 'reported'){
-          $("#popupInfo").html(htmlSuccess('TỐ CÁO SHOP','BẠN KHÔNG THỂ TỐ CÁO SHOP THÊM NỮA !',false));
-        }else if(result == 'cannot'){
-          $("#popupInfo").html(htmlSuccess('TỐ CÁO SHOP','BẠN KHÔNG THỂ TỐ CÁO CHÍNH SHOP CỦA MÌNH !',false));
-        }
-        move_center('#popupCenter');
-      },
-      dataType: 'json'
-    });
-  }else{
-    alert("Bạn chưa nhập nội dung !");
-  }
-});*/
-
-/*$("#card").ajaxForm({
-    type:"POST",
-    url : "http://localhost/zflex/card-handing",
-    dataType: 'json',
-    beforeSubmit : function() {
-        $("#card").addClass('loading');
-    },
-    success: function(data){
-      if(data.result.code == 0)
-      {
-        swal({ 
-            title: "Thành công !",
-            text: "Nạp thành công "+data.result.info_card+ " vào tài khoản !",
-            type: "success" 
-        },
-          function(){
-            window.location.href = '/zflex/index.html';
-        });
-      }else{
-        swal({ 
-            title: "Lỗi !",
-            text: data.result.msg,
-            type: "error" 
-        },
-          function(){
-            // window.location.href = '/zflex/index.html';
-        });
-      }
-      $("#card").removeClass('loading');
-    }});*/
 
 $('.ui.dropdown').dropdown();
 

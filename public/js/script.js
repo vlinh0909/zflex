@@ -1,3 +1,5 @@
+var zflex_url = 'http://localhost/zflex/';
+
 jQuery(document).ready(function($) {
 	var id_media = 0;
 	alertify.logPosition("bottom right");
@@ -9,13 +11,12 @@ jQuery(document).ready(function($) {
 
 jQuery(document).ready(function($) {
 
-	htmlDropzone = function(file)
-	{
+	htmlDropzone = function(file) {
 		xhtml = '';
 		xhtml += '<li class="list-inline-item align-content-stretch">';
             xhtml += '<div class="media-item">';
                 xhtml += '<div class="media-thumbnail">';
-                    xhtml += '<img src="http://localhost/zflex/public/img/'+ file.name +'" data-image-size="' +file.size+ '" data-image-mime="'+ file.type +'" data-image-time="null" class="img-media">';
+                    xhtml += '<img src="'+zflex_url+'public/img/'+ file.name +'" data-image-size="' +file.size+ '" data-image-mime="'+ file.type +'" data-image-time="null" class="img-media">';
                 xhtml += '</div>';
                 xhtml += '<div class="media-description">';
                     xhtml += '<div class="media-title">'+ file.name +'</div>';
@@ -74,16 +75,7 @@ jQuery(document).ready(function($) {
 	$('.side-menu').perfectScrollbar();
 	
 })
-jQuery(document).ready(function($) {
-	gallery_delete = function()
-	{
-		
-	}
 
-	
-
-	
-})
 jQuery(document).ready(function($) {
 	sidebarCollapse = function()
 	{
@@ -160,7 +152,7 @@ jQuery(document).ready(function($) {
 		    case 'image':
 			    xhtml += '<div class="review">';
 			    xhtml += '<div class="img-review">';
-			    	xhtml += '<img src="http://localhost/zflex/public/img/media/'+value+'"/>';
+			    	xhtml += '<img src="'+zflex_url+'public/img/media/'+value+'"/>';
 			    	xhtml += '<i class="icon-bin"></i>';
 			    	xhtml += '<div class="name">'+value+'</div>';
 			    xhtml += '</div>';

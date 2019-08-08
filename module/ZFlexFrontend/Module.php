@@ -82,7 +82,7 @@ class Module implements AutoloaderProviderInterface
         }
         
         $viewModel->nameTheme = $nameTheme;
-        $viewModel->site = $sm->get('config')['website'];;
+        $viewModel->site = $sm->get('config')['website'];
     }
 
     public function getViewHelperConfig()
