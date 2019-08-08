@@ -276,7 +276,6 @@ jQuery(document).ready(function($) {
 })
 
 jQuery(document).ready(function($) {
-	console.log(document.cookie);
 	sizeContent = function ()
 	{
 		$(".main-wrapper").css({'minHeight' : screen.height})
