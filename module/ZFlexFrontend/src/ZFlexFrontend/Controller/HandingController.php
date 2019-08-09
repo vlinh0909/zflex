@@ -485,7 +485,7 @@ public function loadGiaHanAction()
                                 $history_rent->setBoss($rent->getCustomer());
                                 $history_rent->setUsername($rent->getUsername());
                                 $history_rent->setPassword($rent->getPassword());
-                                $history_rent->setPrice($this->FrontendData()->ChietKhau($price));
+                                $history_rent->setPrice($price);
                                 $history_rent->setTime($time);
                                 $history_rent->setRent($rent);
                                 $history_rent->setGiaHanTimes(0);
