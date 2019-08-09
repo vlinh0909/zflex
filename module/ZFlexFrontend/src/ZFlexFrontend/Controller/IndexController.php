@@ -60,7 +60,7 @@ class IndexController extends Controller
     {
         $fb = $this->Framework()->Facebook();
         $helper = $fb->getRedirectLoginHelper();
-        $logoutURL = $helper->getLogoutUrl($_SESSION['fb_access_token'],'http://localhost/zflex/');
+        $logoutURL = $helper->getLogoutUrl($_SESSION['fb_access_token'],PATH);
         unset($_SESSION['fb_access_token']);
         unset($_SESSION['fb_info']);
         return $this->redirect()->toUrl($logoutURL);
