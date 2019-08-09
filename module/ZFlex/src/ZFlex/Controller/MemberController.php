@@ -3,6 +3,7 @@ namespace ZFlex\Controller;
 
 use Zend\View\Model\ViewModel;
 use Zend\EventManager\EventManager;
+use Zend\Session\Container;
 
 class MemberController extends Controller
 {
@@ -126,5 +127,11 @@ class MemberController extends Controller
         }
         $this->flashMessenger()->addSuccessMessage('Cập nhật thành công !');
         return $this->redirect()->toRoute('zflex/member',array('action'=>'list'));
+    }
+
+    public function clearAction() {
+        $session = new Container("fb_info");
+        $session->getManager()->getStorage()->clear('fb_info');
+        return $this->redirect()->toRoute('zflex');
     }
 }

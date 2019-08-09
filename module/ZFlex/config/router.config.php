@@ -178,6 +178,17 @@ return array(
                             ),
                         ),
                     ),
+                    'clear_cache' => array(
+                        'type'    => 'Literal',
+                        'options' => array(
+                            'route'    => '/clear_cache',
+                            'defaults' => array(
+                                '__NAMESPACE__' => 'ZFlex\Controller',
+                                'controller'    => 'Member',
+                                'action'        => 'clear',
+                            ),
+                        ),
+                    ),
                     'customer' => array(
                         'type'    => 'Segment',
                         'options' => array(
