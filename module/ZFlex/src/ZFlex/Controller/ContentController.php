@@ -14,6 +14,7 @@ class ContentController extends Controller
 
 	public function menuAddAction()
 	{
+	    die("Chức năng này tạm đóng");
 		$sm = $this->getServiceLocator();
 		$em = $this->getEM();
 		$form = $sm->get('FormElementManager')->get('MenuForm');

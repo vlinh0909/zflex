@@ -86,9 +86,9 @@ class MediaController extends Controller
             {
                 $sm->get('MediaManager')->delete($val);
             }
-            $arr = 'ok';
+            $status = 'ok';
             $data = new \Zend\View\Model\JsonModel(array(
-                    'result' => $arr,
+                    'result' => $status,
             ));
         }else{
             $data = new \Zend\View\Model\JsonModel(array(
