@@ -55,7 +55,7 @@ class Framework extends AbstractPlugin
 		$helper = $fb->getRedirectLoginHelper();
 		$_SESSION['FBRLH_state']=$_GET['state'];
 		$permissions = ['public_profile','email']; // Optional permissions
-		$loginUrl = $helper->getLoginUrl(PATH + 'login.html', $permissions);
+		$loginUrl = $helper->getLoginUrl(PATH."login.html", $permissions);
 		return $loginUrl;
 	}
 
